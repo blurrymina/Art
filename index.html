@@ -385,130 +385,106 @@
 
 // Painting Game
 const canvas = document.getElementById('paintCanvas');
-    const ctx = canvas.getContext('2d');
-    let painting = false;
-    let tool = 'pen'; // Current tool: 'pen' or 'eraser'
+const ctx = canvas.getContext('2d');
+let painting = false;
+let tool = 'pen';
+const canvasBackgroundColor = '#fff';
+let lastX = 0;
+let lastY = 0;
 
-    // Canvas background color
-    const canvasBackgroundColor = '#fff';
-
-    // Function to adjust canvas size based on device pixel ratio
-    function setCanvasSize() {
-        const rect = canvas.getBoundingClientRect(); // Get canvas size on screen
-        const scaleX = window.devicePixelRatio || 1;  // Device pixel ratio for width
-        const scaleY = window.devicePixelRatio || 1;  // Device pixel ratio for height
-
-        // Set actual width and height for the canvas
-        canvas.width = rect.width * scaleX;
-        canvas.height = rect.height * scaleY;
-
-        // Set the display size in CSS (for responsive design)
-        canvas.style.width = `${rect.width}px`;
-        canvas.style.height = `${rect.height}px`;
-
-        // Scale the context to match the device pixel ratio
-        ctx.scale(scaleX, scaleY);
-    }
-
-    // Call the setCanvasSize function to ensure the canvas scales correctly
-    setCanvasSize();
-
-    // Set up event listeners for canvas
-    function startPosition(e) {
-        painting = true;
-        draw(e);
-    }
-
-    function endPosition() {
-        painting = false;
-        ctx.beginPath();
-    }
-
-    function draw(e) {
-        if (!painting) return;
-
-        const rect = canvas.getBoundingClientRect(); // Get bounding rect of the canvas
-        const scaleX = canvas.width / rect.width; // Get scaling factor for width
-        const scaleY = canvas.height / rect.height; // Get scaling factor for height
-
-        // Adjust the coordinates based on the canvas position and scaling
-        const x = (e.clientX - rect.left) * scaleX;
-        const y = (e.clientY - rect.top) * scaleY;
-
-        ctx.lineCap = 'round';
-
-        if (tool === 'pen') {
-            ctx.strokeStyle = '#ff9a9e'; // Pen color
-            ctx.lineWidth = 5; // Pen size
-        } else if (tool === 'eraser') {
-            ctx.strokeStyle = canvasBackgroundColor; // Eraser color
-            ctx.lineWidth = 20; // Larger size for eraser
-        }
-
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-    }
-
-    // Tool switching logic
-    function activateTool(selectedTool) {
-        tool = selectedTool;
-
-        // Update active class
-        document.querySelectorAll('.tool').forEach(button => {
-            button.classList.remove('active');
-        });
-
-        if (tool === 'pen') {
-            document.getElementById('penTool').classList.add('active');
-        } else if (tool === 'eraser') {
-            document.getElementById('eraserTool').classList.add('active');
-        }
-    }
-
-    document.getElementById('penTool').addEventListener('click', () => {
-        activateTool('pen');
-    });
-
-    document.getElementById('eraserTool').addEventListener('click', () => {
-        activateTool('eraser');
-    });
-
-    // Clear canvas logic (Ensuring it does not trigger tool toggle)
-    document.getElementById('clearCanvas').addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent event propagation to other handlers
-        ctx.fillStyle = canvasBackgroundColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.beginPath();
-    });
-
-    // Attach event listeners to canvas for mouse events
-    canvas.addEventListener('mousedown', startPosition);
-    canvas.addEventListener('mouseup', endPosition);
-    canvas.addEventListener('mousemove', draw);
-
-    // Attach event listeners to canvas for touch events (for touchscreen devices)
-    canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Prevent scrolling on touch
-        startPosition(e.touches[0]);
-    });
-
-    canvas.addEventListener('touchend', () => {
-        endPosition();
-    });
-
-    canvas.addEventListener('touchmove', (e) => {
-        e.preventDefault(); // Prevent scrolling on touch
-        draw(e.touches[0]);
-    });
-
-    // Initialize canvas with background color
+function setCanvasSize() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+    
+    // Fill with background color after resize
     ctx.fillStyle = canvasBackgroundColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
 
-    // Handle window resizing to update canvas size
-    window.addEventListener('resize', setCanvasSize);
+function draw(e) {
+    if (!painting) return;
+    e.preventDefault();
+
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.type.includes('touch') ? e.touches[0].clientX : e.clientX) - rect.left;
+    const y = (e.type.includes('touch') ? e.touches[0].clientY : e.clientY) - rect.top;
+
+    ctx.lineCap = 'round';
+    if (tool === 'pen') {
+        ctx.strokeStyle = '#ff9a9e';
+        ctx.lineWidth = 5;
+    } else if (tool === 'eraser') {
+        ctx.strokeStyle = canvasBackgroundColor;
+        ctx.lineWidth = 20;
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    lastX = x;
+    lastY = y;
+}
+
+function startPosition(e) {
+    painting = true;
+    const rect = canvas.getBoundingClientRect();
+    lastX = (e.type.includes('touch') ? e.touches[0].clientX : e.clientX) - rect.left;
+    lastY = (e.type.includes('touch') ? e.touches[0].clientY : e.clientY) - rect.top;
+}
+
+function endPosition() {
+    painting = false;
+}
+
+function activateTool(selectedTool) {
+    tool = selectedTool;
+    document.querySelectorAll('.tool').forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    if (tool === 'pen') {
+        document.getElementById('penTool').classList.add('active');
+    } else if (tool === 'eraser') {
+        document.getElementById('eraserTool').classList.add('active');
+    }
+}
+
+// Mouse Events
+canvas.addEventListener('mousedown', startPosition);
+canvas.addEventListener('mouseup', endPosition);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseleave', endPosition);
+
+// Touch Events
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    startPosition(e);
+});
+canvas.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    endPosition();
+});
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    draw(e);
+});
+
+// Tool Selection
+document.getElementById('penTool').addEventListener('click', () => activateTool('pen'));
+document.getElementById('eraserTool').addEventListener('click', () => activateTool('eraser'));
+
+// Clear Canvas
+document.getElementById('clearCanvas').addEventListener('click', () => {
+    ctx.fillStyle = canvasBackgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+});
+
+// Initialize
+setCanvasSize();
+window.addEventListener('resize', setCanvasSize);
     </script>
 </body>
 </html>
