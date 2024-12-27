@@ -367,7 +367,7 @@
             }
         });
 
-        // Painting Game
+
 // Painting Game
 const canvas = document.getElementById('paintCanvas');
 const ctx = canvas.getContext('2d');
@@ -391,6 +391,7 @@ function endPosition() {
 function draw(e) {
     if (!painting) return;
 
+    // Account for any canvas offsets, including the device's scaling
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -462,6 +463,7 @@ function endTouchPosition() {
 function drawTouch(e) {
     if (!painting) return;
 
+    // Account for canvas offset and border, including device pixel ratio
     const rect = canvas.getBoundingClientRect();
     const x = e.touches[0].clientX - rect.left;
     const y = e.touches[0].clientY - rect.top;
