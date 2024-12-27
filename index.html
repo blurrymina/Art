@@ -242,15 +242,6 @@ header nav ul li a {
             cursor: pointer;
             transition: transform 0.3s, color 0.3s;
         }
-        .tool1 {
-            background: none;
-            border: none;
-            margin: 0 10px;
-            font-size: 1.5rem;
-            color: #ff9a9e;
-            cursor: pointer;
-            transition: transform 0.3s, color 0.3s;
-        }
 
         .tool.active {
             transform: scale(1.2);
@@ -349,11 +340,11 @@ header nav ul li a {
             <button id="eraserTool" class="tool" aria-label="Eraser Tool">
                 <i class="fas fa-eraser"></i>
             </button>
-            <button id="clearCanvas" class="tool1" aria-label="Clear Canvas">
+            <button id="clearCanvas" class="tool" aria-label="Clear Canvas">
                 <i class="fas fa-trash"></i>
             </button>
         </div>
-        <canvas id="paintCanvas" width="800" height="600"></canvas> 
+        <canvas id="paintCanvas" width="500" height="500"></canvas> 
 
     </section>
 
