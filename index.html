@@ -377,6 +377,23 @@ let tool = 'pen'; // Current tool: 'pen' or 'eraser'
 // Canvas background color
 const canvasBackgroundColor = '#fff';
 
+// Function to adjust canvas size based on device pixel ratio
+function setCanvasSize() {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = window.devicePixelRatio;  // Device pixel ratio for width
+    const scaleY = window.devicePixelRatio;  // Device pixel ratio for height
+
+    canvas.width = rect.width * scaleX;
+    canvas.height = rect.height * scaleY;
+    canvas.style.width = `${rect.width}px`;  // Set the display size
+    canvas.style.height = `${rect.height}px`; // Set the display size
+
+    ctx.scale(scaleX, scaleY);  // Scale the context to match the device pixel ratio
+}
+
+// Call the setCanvasSize function to ensure the canvas scales correctly
+setCanvasSize();
+
 // Set up event listeners for canvas
 function startPosition(e) {
     painting = true;
@@ -391,10 +408,10 @@ function endPosition() {
 function draw(e) {
     if (!painting) return;
 
-    // Account for any canvas offsets, including the device's scaling
+    // Account for canvas offset and correct touch coordinates
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = (e.clientX - rect.left) * (canvas.width / rect.width);  // Adjust for scaling
+    const y = (e.clientY - rect.top) * (canvas.height / rect.height);  // Adjust for scaling
 
     ctx.lineCap = 'round';
 
@@ -463,10 +480,10 @@ function endTouchPosition() {
 function drawTouch(e) {
     if (!painting) return;
 
-    // Account for canvas offset and border, including device pixel ratio
+    // Account for canvas offset and correct touch coordinates
     const rect = canvas.getBoundingClientRect();
-    const x = e.touches[0].clientX - rect.left;
-    const y = e.touches[0].clientY - rect.top;
+    const x = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width);  // Adjust for scaling
+    const y = (e.touches[0].clientY - rect.top) * (canvas.height / rect.height);  // Adjust for scaling
 
     ctx.lineCap = 'round';
 
