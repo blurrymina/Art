@@ -17,8 +17,7 @@
         body {
             font-family: 'Roboto', sans-serif; /* Default font for the body */
             background-color: #fff8f8; /* Soft pastel background */
-            overflow-x: hidden;
-            
+            overflow-x: hidden;   
         }
 
         header {
@@ -251,7 +250,7 @@ header nav ul li a {
             transform: scale(1.1);
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 768px) and (orientation: landscape)  {
     header {
         padding: 20px 25px; /* Reduced padding */
     }
@@ -282,7 +281,7 @@ header nav ul li a {
 }
 
 /* For very small screens */
-@media (max-width: 480px) {
+@media (max-width: 480px) and (orientation: landscape)  {
     header {
         padding: 8px 15px; /* Even smaller padding */
     }
