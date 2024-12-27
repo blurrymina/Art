@@ -22,50 +22,44 @@
         }
 
         header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4); /* Soft gradient */
-            color: #fff;
-            padding: 20px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            font-family: 'Dancing Script', cursive; /* Girly, playful font */
-        }
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+    color: #fff;
+    padding: 15px 50px; /* Reduced from 20px */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    font-family: 'Dancing Script', cursive;
+}
 
-        header .logo {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
+header .logo {
+    font-size: 1.7rem; /* Reduced from 2rem */
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
 
-        header nav ul {
-            list-style: none;
-            display: flex;
-        }
+header nav ul {
+    list-style: none;
+    display: flex;
+}
 
-        header nav ul li {
-            margin: 0 15px;
-        }
+header nav ul li {
+    margin: 0 15px;
+}
 
-        header nav ul li a {
-            text-decoration: none;
-            color: #fff;
-            
-            font-size: 1.1rem;
-            transition: color 0.3s;
-            font-family: 'Dancing Script', cursive;/* Use clean font for navigation */
-        }
-
-        header nav ul li a:hover {
-            color: #ff9a9e;
-        }
-
+header nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1rem; /* Reduced from 1.1rem */
+    transition: color 0.3s;
+    font-family: 'Dancing Script', cursive;
+}
         .hero {
             height: 100vh;
             display: flex;
@@ -258,7 +252,7 @@
 
         @media (max-width: 768px) {
     header {
-        padding: 10px 20px; /* Reduced padding */
+        padding: 15px 25px; /* Reduced padding */
     }
 
     header .logo {
@@ -275,7 +269,7 @@
 
     header nav ul li a {
         font-size: 0.9rem; /* Smaller font size for nav items */
-        padding: 5px 8px; /* Add some padding for better touch targets */
+        padding: 6px 10px; /* Add some padding for better touch targets */
     }
 
     /* Adjust the content below header */
@@ -400,14 +394,39 @@ const canvasBackgroundColor = '#fff';
 let lastX = 0;
 let lastY = 0;
 
+// Create an off-screen canvas to store the drawing
+const offScreenCanvas = document.createElement('canvas');
+const offScreenCtx = offScreenCanvas.getContext('2d');
+
 function setCanvasSize() {
     const rect = canvas.getBoundingClientRect();
+    
+    // Store current drawing
+    const currentDrawing = canvas.toDataURL();
+    
+    // Set main canvas size
     canvas.width = rect.width;
     canvas.height = rect.height;
     
-    // Fill with background color after resize
+    // Set off-screen canvas size
+    offScreenCanvas.width = rect.width;
+    offScreenCanvas.height = rect.height;
+    
+    // Fill both canvases with background color
     ctx.fillStyle = canvasBackgroundColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    offScreenCtx.fillStyle = canvasBackgroundColor;
+    offScreenCtx.fillRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
+    
+    // Restore drawing after resize
+    if (currentDrawing) {
+        const img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+            offScreenCtx.drawImage(img, 0, 0);
+        };
+        img.src = currentDrawing;
+    }
 }
 
 function draw(e) {
@@ -419,18 +438,27 @@ function draw(e) {
     const y = (e.type.includes('touch') ? e.touches[0].clientY : e.clientY) - rect.top;
 
     ctx.lineCap = 'round';
+    offScreenCtx.lineCap = 'round';
+
     if (tool === 'pen') {
         ctx.strokeStyle = '#ff9a9e';
         ctx.lineWidth = 5;
+        offScreenCtx.strokeStyle = '#ff9a9e';
+        offScreenCtx.lineWidth = 5;
     } else if (tool === 'eraser') {
         ctx.strokeStyle = canvasBackgroundColor;
         ctx.lineWidth = 20;
+        offScreenCtx.strokeStyle = canvasBackgroundColor;
+        offScreenCtx.lineWidth = 20;
     }
 
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(x, y);
-    ctx.stroke();
+    // Draw on both canvases
+    [ctx, offScreenCtx].forEach(context => {
+        context.beginPath();
+        context.moveTo(lastX, lastY);
+        context.lineTo(x, y);
+        context.stroke();
+    });
 
     lastX = x;
     lastY = y;
@@ -447,6 +475,14 @@ function endPosition() {
     painting = false;
 }
 
+// Add scroll handler to restore drawing
+function handleScroll() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = canvasBackgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(offScreenCanvas, 0, 0);
+}
+
 function activateTool(selectedTool) {
     tool = selectedTool;
     document.querySelectorAll('.tool').forEach(button => {
@@ -459,6 +495,14 @@ function activateTool(selectedTool) {
         document.getElementById('eraserTool').classList.add('active');
     }
 }
+
+// Clear Canvas
+document.getElementById('clearCanvas').addEventListener('click', () => {
+    ctx.fillStyle = canvasBackgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    offScreenCtx.fillStyle = canvasBackgroundColor;
+    offScreenCtx.fillRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
+});
 
 // Mouse Events
 canvas.addEventListener('mousedown', startPosition);
@@ -484,11 +528,8 @@ canvas.addEventListener('touchmove', (e) => {
 document.getElementById('penTool').addEventListener('click', () => activateTool('pen'));
 document.getElementById('eraserTool').addEventListener('click', () => activateTool('eraser'));
 
-// Clear Canvas
-document.getElementById('clearCanvas').addEventListener('click', () => {
-    ctx.fillStyle = canvasBackgroundColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-});
+// Add scroll event listener
+window.addEventListener('scroll', handleScroll);
 
 // Initialize
 setCanvasSize();
