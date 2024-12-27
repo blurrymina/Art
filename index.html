@@ -201,9 +201,9 @@ header nav ul li a {
         }
 
         .painting-game canvas {
-    width: 100%; /* Makes the canvas fill the available width */
-    max-width: 1000px; /* Set a maximum width for large screens */
-    height: 600px; /* Fixed height for consistency */
+    width: 100%;
+    max-width: 500px; /* Set a reasonable maximum width for the canvas */
+    height: auto; /* Maintain aspect ratio */
     border: 2px solid #ff9a9e;
     border-radius: 10px;
     cursor: crosshair;
@@ -272,7 +272,9 @@ header nav ul li a {
         font-size: 0.9rem; /* Smaller font size for nav items */
         padding: 6px 10px; /* Add some padding for better touch targets */
     }
-
+    .painting-game canvas {
+        max-width: 90%; /* Slightly reduce the width for smaller screens */
+    }
     /* Adjust the content below header */
     .hero {
         margin-top: 0; /* Adjust based on new header height */
@@ -307,7 +309,7 @@ header nav ul li a {
             <ul>
                 <li><a href="#">Home</a></li>
                 <li><a href="#gallery">Gallery</a></li>
-                <li><a href="#painting-game">Painting Game</a></li>
+                <li><a href="#painting-game">Draw</a></li>
                 <li><a href="#about">About</a></li>
             </ul>
         </nav>
@@ -403,35 +405,26 @@ const offScreenCanvas = document.createElement('canvas');
 const offScreenCtx = offScreenCanvas.getContext('2d');
 
 function setCanvasSize() {
-    const rect = canvas.getBoundingClientRect();
-    
-    // Store current drawing
-    const currentDrawing = canvas.toDataURL();
-    
-    // Set main canvas size
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-    
-    // Set off-screen canvas size
-    offScreenCanvas.width = rect.width;
-    offScreenCanvas.height = rect.height;
-    
-    // Fill both canvases with background color
+    const aspectRatio = 4 / 3; // Example aspect ratio (width/height)
+    const maxCanvasWidth = Math.min(window.innerWidth * 0.9, 500); // Limit max width
+    const canvasWidth = maxCanvasWidth;
+    const canvasHeight = canvasWidth / aspectRatio;
+
+    // Update canvas dimensions
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+
+    // Update off-screen canvas dimensions
+    offScreenCanvas.width = canvasWidth;
+    offScreenCanvas.height = canvasHeight;
+
+    // Fill canvas with the background color
     ctx.fillStyle = canvasBackgroundColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     offScreenCtx.fillStyle = canvasBackgroundColor;
     offScreenCtx.fillRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
-    
-    // Restore drawing after resize
-    if (currentDrawing) {
-        const img = new Image();
-        img.onload = function() {
-            ctx.drawImage(img, 0, 0);
-            offScreenCtx.drawImage(img, 0, 0);
-        };
-        img.src = currentDrawing;
-    }
 }
+
 
 function draw(e) {
     if (!painting) return;
@@ -568,6 +561,8 @@ window.addEventListener('scroll', handleScroll);
 // Initialize
 setCanvasSize();
 window.addEventListener('resize', setCanvasSize);
+window.addEventListener('orientationchange', setCanvasSize);
+
     </script>
 </body>
 </html>
