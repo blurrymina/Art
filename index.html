@@ -257,38 +257,46 @@
         }
 
         @media (max-width: 768px) {
+    header {
+        padding: 10px 20px; /* Reduced padding */
+    }
+
     header .logo {
-        font-size: 1rem;
+        font-size: 1.2rem; /* Slightly larger than previous 1rem for better readability */
+    }
+
+    header nav ul {
+        gap: 10px; /* Use gap instead of margins for better spacing control */
     }
 
     header nav ul li {
-        margin: 0 8px;
+        margin: 0; /* Remove existing margins */
     }
 
-    .hero h1 {
-        font-size: 2rem;
+    header nav ul li a {
+        font-size: 0.9rem; /* Smaller font size for nav items */
+        padding: 5px 8px; /* Add some padding for better touch targets */
     }
 
-    .gallery h1 {
-        font-size: 2rem;
+    /* Adjust the content below header */
+    .hero {
+        margin-top: 42px; /* Adjust based on new header height */
+    }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    header {
+        padding: 8px 15px; /* Even smaller padding */
     }
 
-    .gallery {
-        padding: 20px;
+    header .logo {
+        font-size: 1.1rem; /* Slightly smaller logo */
     }
 
-    .gallery img {
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .about h2 {
-        font-size: 1.5rem;
-    }
-
-    .painting-game canvas {
-        width: 100%; /* Make the canvas responsive */
-        height: auto; /* Allow the height to adjust based on the width */
+    header nav ul li a {
+        font-size: 0.8rem; /* Smaller font size */
+        padding: 4px 6px; /* Smaller padding */
     }
 }
 
@@ -335,7 +343,7 @@
             <button id="eraserTool" class="tool" aria-label="Eraser Tool">
                 <i class="fas fa-eraser"></i>
             </button>
-            <button id="clearCanvas"  aria-label="Clear Canvas">
+            <button id="clearCanvas" class="tool" aria-label="Clear Canvas">
                 <i class="fas fa-trash"></i>
             </button>
         </div>
