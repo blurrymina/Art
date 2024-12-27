@@ -383,12 +383,16 @@ function setCanvasSize() {
     const scaleX = window.devicePixelRatio;  // Device pixel ratio for width
     const scaleY = window.devicePixelRatio;  // Device pixel ratio for height
 
+    // Set actual width and height for the canvas
     canvas.width = rect.width * scaleX;
     canvas.height = rect.height * scaleY;
-    canvas.style.width = `${rect.width}px`;  // Set the display size
-    canvas.style.height = `${rect.height}px`; // Set the display size
 
-    ctx.scale(scaleX, scaleY);  // Scale the context to match the device pixel ratio
+    // Set the display size in CSS (for responsive design)
+    canvas.style.width = `${rect.width}px`;
+    canvas.style.height = `${rect.height}px`;
+
+    // Scale the context to match the device pixel ratio
+    ctx.scale(scaleX, scaleY);
 }
 
 // Call the setCanvasSize function to ensure the canvas scales correctly
