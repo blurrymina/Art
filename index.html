@@ -377,6 +377,10 @@ let tool = 'pen'; // Current tool: 'pen' or 'eraser'
 // Canvas background color
 const canvasBackgroundColor = '#fff';
 
+// Fixed pixel offset to adjust the touch position
+const FIXED_X_OFFSET = 10; // Adjust as needed
+const FIXED_Y_OFFSET = 10; // Adjust as needed
+
 // Function to adjust canvas size based on device pixel ratio
 function setCanvasSize() {
     const rect = canvas.getBoundingClientRect(); // Get canvas size on screen
@@ -414,8 +418,8 @@ function draw(e) {
 
     const rect = canvas.getBoundingClientRect(); // Get bounding rect of the canvas
     // Adjust the coordinates based on the canvas position and scaling
-    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
-    const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+    const x = (e.clientX - rect.left) * (canvas.width / rect.width) + FIXED_X_OFFSET;
+    const y = (e.clientY - rect.top) * (canvas.height / rect.height) + FIXED_Y_OFFSET;
 
     ctx.lineCap = 'round';
 
@@ -486,8 +490,8 @@ function drawTouch(e) {
 
     const rect = canvas.getBoundingClientRect(); // Get bounding rect of the canvas
     // Adjust the coordinates based on the canvas position and scaling
-    const x = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width);
-    const y = (e.touches[0].clientY - rect.top) * (canvas.height / rect.height);
+    const x = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width) + FIXED_X_OFFSET;
+    const y = (e.touches[0].clientY - rect.top) * (canvas.height / rect.height) + FIXED_Y_OFFSET;
 
     ctx.lineCap = 'round';
 
