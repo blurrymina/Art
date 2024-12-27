@@ -368,85 +368,88 @@
         });
 
         // Painting Game
-        const canvas = document.getElementById('paintCanvas');
-        const ctx = canvas.getContext('2d');
-        let painting = false;
-        let tool = 'pen'; // Current tool: 'pen' or 'eraser'
+// Painting Game
+const canvas = document.getElementById('paintCanvas');
+const ctx = canvas.getContext('2d');
+let painting = false;
+let tool = 'pen'; // Current tool: 'pen' or 'eraser'
 
-        // Canvas background color
-        const canvasBackgroundColor = '#fff';
+// Canvas background color
+const canvasBackgroundColor = '#fff';
 
-        // Set up event listeners for canvas
-        function startPosition(e) {
-            painting = true;
-            draw(e);
-        }
+// Set up event listeners for canvas
+function startPosition(e) {
+    painting = true;
+    draw(e);
+}
 
-        function endPosition() {
-            painting = false;
-            ctx.beginPath();
-        }
+function endPosition() {
+    painting = false;
+    ctx.beginPath();
+}
 
-        function draw(e) {
-            if (!painting) return;
+function draw(e) {
+    if (!painting) return;
 
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-            ctx.lineCap = 'round';
+    ctx.lineCap = 'round';
 
-            if (tool === 'pen') {
-                ctx.strokeStyle = '#ff9a9e'; // Pen color
-                ctx.lineWidth = 5; // Pen size
-            } else if (tool === 'eraser') {
-                ctx.strokeStyle = canvasBackgroundColor; // Match canvas background
-                ctx.lineWidth = 20; // Larger size for eraser
-            }
+    if (tool === 'pen') {
+        ctx.strokeStyle = '#ff9a9e'; // Pen color
+        ctx.lineWidth = 5; // Pen size
+    } else if (tool === 'eraser') {
+        ctx.strokeStyle = canvasBackgroundColor; // Match canvas background
+        ctx.lineWidth = 20; // Larger size for eraser
+    }
 
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-        }
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+}
 
-        // Tool switching logic
-        function activateTool(selectedTool) {
-            tool = selectedTool;
+// Tool switching logic
+function activateTool(selectedTool) {
+    tool = selectedTool;
 
-            // Update active class
-            document.querySelectorAll('.tool').forEach(button => {
-                button.classList.remove('active');
-            });
+    // Update active class
+    document.querySelectorAll('.tool').forEach(button => {
+        button.classList.remove('active');
+    });
 
-            if (tool === 'pen') {
-                document.getElementById('penTool').classList.add('active');
-            } else if (tool === 'eraser') {
-                document.getElementById('eraserTool').classList.add('active');
-            }
-        }
+    if (tool === 'pen') {
+        document.getElementById('penTool').classList.add('active');
+    } else if (tool === 'eraser') {
+        document.getElementById('eraserTool').classList.add('active');
+    }
+}
 
-        document.getElementById('penTool').addEventListener('click', () => {
-            activateTool('pen');
-        });
+document.getElementById('penTool').addEventListener('click', () => {
+    activateTool('pen');
+});
 
-        document.getElementById('eraserTool').addEventListener('click', () => {
-            activateTool('eraser');
-        });
+document.getElementById('eraserTool').addEventListener('click', () => {
+    activateTool('eraser');
+});
 
-        // Clear canvas logic
-        document.getElementById('clearCanvas').addEventListener('click', () => {
-            ctx.fillStyle = canvasBackgroundColor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.beginPath();
-        });
+// Clear canvas logic
+document.getElementById('clearCanvas').addEventListener('click', () => {
+    ctx.fillStyle = canvasBackgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+});
 
-        // Attach event listeners to canvas
-        canvas.addEventListener('mousedown', startPosition);
-        canvas.addEventListener('mouseup', endPosition);
-        canvas.addEventListener('mousemove', draw);
+// Attach event listeners to canvas
+canvas.addEventListener('mousedown', startPosition);
+canvas.addEventListener('mouseup', endPosition);
+canvas.addEventListener('mousemove', draw);
+
 // Add support for mobile touch events
 function startTouchPosition(e) {
+    e.preventDefault(); // Prevent page scrolling
     painting = true;
     drawTouch(e);
 }
@@ -459,7 +462,6 @@ function endTouchPosition() {
 function drawTouch(e) {
     if (!painting) return;
 
-    // Handle touch events by getting the position of the touch
     const rect = canvas.getBoundingClientRect();
     const x = e.touches[0].clientX - rect.left;
     const y = e.touches[0].clientY - rect.top;
@@ -485,10 +487,10 @@ canvas.addEventListener('touchstart', startTouchPosition);
 canvas.addEventListener('touchend', endTouchPosition);
 canvas.addEventListener('touchmove', drawTouch);
 
-        // Initialize canvas with background color
-        ctx.fillStyle = canvasBackgroundColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
+// Initialize canvas with background color
+ctx.fillStyle = canvasBackgroundColor;
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     </script>
 </body>
 </html>
