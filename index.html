@@ -28,7 +28,7 @@
     width: 100%;
     background: linear-gradient(45deg, #ff9a9e, #fad0c4);
     color: #fff;
-    padding: 15px 50px; /* Reduced from 20px */
+    padding: 3px 50px; /* Reduced from 20px */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -96,8 +96,8 @@ header nav ul li a {
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 20px;
+            gap: 50px;
+            padding: 50px;
         }
         .gallery  h1 {
             color: #ff9a9e;
@@ -201,13 +201,15 @@ header nav ul li a {
         }
 
         .painting-game canvas {
-            border: 2px solid #ff9a9e;
-            border-radius: 10px;
-            cursor: crosshair;
-            margin-top: 20px;
-            max-width: 100%;
-            height: auto;
-        }
+    width: 100%; /* Makes the canvas fill the available width */
+    max-width: 1000px; /* Set a maximum width for large screens */
+    height: 600px; /* Fixed height for consistency */
+    border: 2px solid #ff9a9e;
+    border-radius: 10px;
+    cursor: crosshair;
+    margin-top: 20px;
+}
+
 
         .painting-game button {
             margin-top: 20px;
@@ -252,7 +254,7 @@ header nav ul li a {
 
         @media (max-width: 768px) {
     header {
-        padding: 15px 25px; /* Reduced padding */
+        padding: 20px 25px; /* Reduced padding */
     }
 
     header .logo {
@@ -314,7 +316,6 @@ header nav ul li a {
             <h1>Welcome To My Art World</h1>
         </div>
     </section>
-
     <section id="gallery" class="gallery">
         <h1>Gallery</h1>
         <img src="0.PNG" alt="Artwork 1">
@@ -341,7 +342,8 @@ header nav ul li a {
                 <i class="fas fa-trash"></i>
             </button>
         </div>
-        <canvas id="paintCanvas" width="500" height="400"></canvas>
+        <canvas id="paintCanvas" width="800" height="600"></canvas> 
+
     </section>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -462,6 +464,36 @@ function draw(e) {
 
     lastX = x;
     lastY = y;
+}
+function setCanvasSize() {
+    const rect = canvas.getBoundingClientRect();
+    
+    // Store current drawing
+    const currentDrawing = canvas.toDataURL();
+    
+    // Set main canvas size
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+    
+    // Set off-screen canvas size
+    offScreenCanvas.width = rect.width;
+    offScreenCanvas.height = rect.height;
+    
+    // Fill both canvases with background color
+    ctx.fillStyle = canvasBackgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    offScreenCtx.fillStyle = canvasBackgroundColor;
+    offScreenCtx.fillRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
+    
+    // Restore drawing after resize
+    if (currentDrawing) {
+        const img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+            offScreenCtx.drawImage(img, 0, 0);
+        };
+        img.src = currentDrawing;
+    }
 }
 
 function startPosition(e) {
