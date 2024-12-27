@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mina</title>
     <link rel="icon" type="image/png" href="icon.webp">
+    <!-- Adding Google Font for Girly Vibes -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,8 +15,10 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif; /* Default font for the body */
+            background-color: #fff8f8; /* Soft pastel background */
             overflow-x: hidden;
+            
         }
 
         header {
@@ -22,19 +26,22 @@
             top: 0;
             left: 0;
             width: 100%;
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4); /* Soft gradient */
             color: #fff;
-            padding: 15px 50px;
+            padding: 20px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             z-index: 1000;
+            font-family: 'Dancing Script', cursive; /* Girly, playful font */
         }
 
         header .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         header nav ul {
@@ -49,12 +56,14 @@
         header nav ul li a {
             text-decoration: none;
             color: #fff;
-            font-size: 1rem;
+            
+            font-size: 1.1rem;
             transition: color 0.3s;
+            font-family: 'Dancing Script', cursive;/* Use clean font for navigation */
         }
 
         header nav ul li a:hover {
-            color: #000;
+            color: #ff9a9e;
         }
 
         .hero {
@@ -66,7 +75,7 @@
             color: #fff;
             text-align: center;
             padding: 20px;
-            animation: fadeIn 2s;
+            animation: fadeIn 3s;
         }
 
         @keyframes fadeIn {
@@ -80,7 +89,8 @@
 
         .hero h1 {
             color: #ff9a9e;
-            font-size: 3rem;
+            font-size: 4rem;
+            font-family: 'Dancing Script', cursive; /* Girly script font */
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
         }
 
@@ -90,30 +100,29 @@
         }
 
         .gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
-        padding: 20px;
-    }
-
-    .gallery img {
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .gallery img:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Make gallery images more mobile-friendly */
-    @media (max-width: 768px) {
-        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
             padding: 20px;
         }
-    }
+        .gallery  h1 {
+            color: #ff9a9e;
+            font-size: 4rem;
+            font-family: 'Dancing Script', cursive; /* Girly script font */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
 
         .popup {
             position: fixed;
@@ -148,11 +157,13 @@
             padding: 50px;
             background: #fef9f9;
             text-align: center;
+            font-family: 'Roboto', sans-serif;
         }
 
         .about h2 {
             font-size: 2rem;
             margin-bottom: 20px;
+            font-family: 'Dancing Script', cursive; /* Girly, elegant font for headings */
         }
 
         .about p {
@@ -247,14 +258,18 @@
 
         @media (max-width: 768px) {
             header .logo {
-                font-size: 1.2rem;
+                font-size: 1rem;
             }
 
             header nav ul li {
-                margin: 0 10px;
+                margin: 0 8px;
             }
 
             .hero h1 {
+                font-size: 2rem;
+            }
+
+            .gallery h1 {
                 font-size: 2rem;
             }
 
@@ -298,6 +313,7 @@
     </section>
 
     <section id="gallery" class="gallery">
+        <h1>Gallery</h1>
         <img src="0.PNG" alt="Artwork 1">
         <img src="1.PNG" alt="Artwork 2">
         <img src="2.PNG" alt="Artwork 3">
@@ -325,7 +341,6 @@
         <canvas id="paintCanvas" width="500" height="400"></canvas>
     </section>
 
-    <!-- Add Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <section id="about" class="about">
@@ -367,7 +382,6 @@
             }
         });
 
-
 // Painting Game
 const canvas = document.getElementById('paintCanvas');
 const ctx = canvas.getContext('2d');
@@ -377,15 +391,11 @@ let tool = 'pen'; // Current tool: 'pen' or 'eraser'
 // Canvas background color
 const canvasBackgroundColor = '#fff';
 
-// Fixed pixel offset to adjust the touch position
-const FIXED_X_OFFSET = 10; // Adjust as needed
-const FIXED_Y_OFFSET = 10; // Adjust as needed
-
 // Function to adjust canvas size based on device pixel ratio
 function setCanvasSize() {
     const rect = canvas.getBoundingClientRect(); // Get canvas size on screen
-    const scaleX = window.devicePixelRatio;  // Device pixel ratio for width
-    const scaleY = window.devicePixelRatio;  // Device pixel ratio for height
+    const scaleX = window.devicePixelRatio || 1;  // Device pixel ratio for width
+    const scaleY = window.devicePixelRatio || 1;  // Device pixel ratio for height
 
     // Set actual width and height for the canvas
     canvas.width = rect.width * scaleX;
@@ -418,8 +428,8 @@ function draw(e) {
 
     const rect = canvas.getBoundingClientRect(); // Get bounding rect of the canvas
     // Adjust the coordinates based on the canvas position and scaling
-    const x = (e.clientX - rect.left) * (canvas.width / rect.width) + FIXED_X_OFFSET;
-    const y = (e.clientY - rect.top) * (canvas.height / rect.height) + FIXED_Y_OFFSET;
+    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (e.clientY - rect.top) * (canvas.height / rect.height);
 
     ctx.lineCap = 'round';
 
@@ -427,7 +437,7 @@ function draw(e) {
         ctx.strokeStyle = '#ff9a9e'; // Pen color
         ctx.lineWidth = 5; // Pen size
     } else if (tool === 'eraser') {
-        ctx.strokeStyle = canvasBackgroundColor; // Match canvas background
+        ctx.strokeStyle = canvasBackgroundColor; // Eraser color
         ctx.lineWidth = 20; // Larger size for eraser
     }
 
@@ -461,8 +471,9 @@ document.getElementById('eraserTool').addEventListener('click', () => {
     activateTool('eraser');
 });
 
-// Clear canvas logic
-document.getElementById('clearCanvas').addEventListener('click', () => {
+// Clear canvas logic (Ensuring it does not trigger tool toggle)
+document.getElementById('clearCanvas').addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent event propagation to other handlers
     ctx.fillStyle = canvasBackgroundColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
@@ -490,8 +501,8 @@ function drawTouch(e) {
 
     const rect = canvas.getBoundingClientRect(); // Get bounding rect of the canvas
     // Adjust the coordinates based on the canvas position and scaling
-    const x = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width) - FIXED_X_OFFSET;
-    const y = (e.touches[0].clientY - rect.top) * (canvas.height / rect.height) - FIXED_Y_OFFSET;
+    const x = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width);
+    const y = (e.touches[0].clientY - rect.top) * (canvas.height / rect.height);
 
     ctx.lineCap = 'round';
 
@@ -517,6 +528,9 @@ canvas.addEventListener('touchmove', drawTouch);
 // Initialize canvas with background color
 ctx.fillStyle = canvasBackgroundColor;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+// Handle window resizing to update canvas size
+window.addEventListener('resize', setCanvasSize);
 
     </script>
 </body>
