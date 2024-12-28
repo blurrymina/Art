@@ -262,6 +262,7 @@ header nav ul li a {
     }
     iframe {
                 height: 70vh;
+                transform: rotate(90deg);
             }
     header .logo {
         font-size: 1rem; /* Slightly larger than previous 1rem for better readability */
@@ -540,7 +541,9 @@ document.getElementById('eraserTool').addEventListener('click', () => activateTo
 
 // Add scroll event listener
 window.addEventListener('scroll', handleScroll);
-
+document.body.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
 // Initialize
 setCanvasSize();
 window.addEventListener('resize', setCanvasSize);
