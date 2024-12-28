@@ -212,14 +212,22 @@
 
         .painting-game iframe {
             width: 100%;
-            height: 60vh;
+            height: 60vh;  /* Default height for portrait */
             max-width: 800px; /* Ensure iframe does not grow too wide */
             border: none;
             transition: all 0.3s ease;
         }
+
         @media (orientation: landscape) {
             .painting-game iframe {
-                height: 50vh;
+                height: 70vh; /* Taller in landscape */
+                width: 85vw;  /* Make it wider in landscape */
+            }
+        }
+        @media (orientation: portrait) {
+            .painting-game iframe {
+                height: 60vh; /* Slightly taller in portrait */
+                width: 90vw;  /* Make it slightly wider in portrait */
             }
         }
         @media (max-width: 768px)  {
