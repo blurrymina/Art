@@ -21,44 +21,44 @@
         }
 
         header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: linear-gradient(45deg, #ff9a9e, #fad0c4);
-    color: #fff;
-    padding: 3px 50px; /* Reduced from 20px */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    font-family: 'Dancing Script', cursive;
-}
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            color: #fff;
+            padding: 3px 50px; /* Reduced from 20px */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            font-family: 'Dancing Script', cursive;
+        }
 
-header .logo {
-    font-size: 1.7rem; /* Reduced from 2rem */
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
+        header .logo {
+            font-size: 1.7rem; /* Reduced from 2rem */
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
 
-header nav ul {
-    list-style: none;
-    display: flex;
-}
+        header nav ul {
+            list-style: none;
+            display: flex;
+        }
 
-header nav ul li {
-    margin: 0 15px;
-}
+        header nav ul li {
+            margin: 0 15px;
+        }
 
-header nav ul li a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 1rem; /* Reduced from 1.1rem */
-    transition: color 0.3s;
-    font-family: 'Dancing Script', cursive;
-}
+        header nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1rem; /* Reduced from 1.1rem */
+            transition: color 0.3s;
+            font-family: 'Dancing Script', cursive;
+        }
         .hero {
             height: 100vh;
             display: flex;
@@ -173,24 +173,24 @@ header nav ul li a {
         }
 
         .social a {
-    margin: 0 15px;
-    text-decoration: none;
-    font-size: 2rem; /* Adjust icon size */
-    color: #ff9a9e;
-    transition: transform 0.3s, color 0.3s;
-}
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 2rem; /* Adjust icon size */
+            color: #ff9a9e;
+            transition: transform 0.3s, color 0.3s;
+        }
 
-.social a:hover {
-    transform: scale(1.2);
-    color: #f06292; /* Highlight color on hover */
-}
+        .social a:hover {
+            transform: scale(1.2);
+            color: #f06292; /* Highlight color on hover */
+        }
 
         footer {
             background: #333;
             color: #fff;
             text-align: center;
             padding: 15px;
-            margin-top: 20px; 
+            margin-top: 20px;
 
         }
 
@@ -203,122 +203,61 @@ header nav ul li a {
             background: #fff5f5;
             text-align: center;
             overflow: hidden;
-            padding-top: 100px; 
+            padding-top: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
- iframe {
-            width: 70vw;
-            height: 70vh;
+
+        .painting-game iframe {
+            width: 100%;
+            height: 60vh;
+            max-width: 800px; /* Ensure iframe does not grow too wide */
             border: none;
             transition: all 0.3s ease;
         }
-        .painting-game iframe {
-            overflow: hidden;
-        }
-
-        .painting-game canvas {
-    width: 100%;
-    max-width: 500px; /* Set a reasonable maximum width for the canvas */
-    height: auto; /* Maintain aspect ratio */
-    border: 2px solid #ff9a9e;
-    border-radius: 10px;
-    cursor: crosshair;
-    margin-top: 20px;
-}
-
-
-        .painting-game button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #ff9a9e;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .painting-game button:hover {
-            background: #f06292;
-        }
-
-        .tools {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .tool {
-            background: none;
-            border: none;
-            margin: 0 10px;
-            font-size: 1.5rem;
-            color: #ff9a9e;
-            cursor: pointer;
-            transition: transform 0.3s, color 0.3s;
-        }
-
-        .tool.active {
-            transform: scale(1.2);
-        }
-
-        .tool:hover {
-            transform: scale(1.1);
-        }
-
-        @media (max-width: 768px)  {
-            @media screen and (orientation: portrait) {
-            iframe {
-                width: 100vw; /* Use 200% width for mobile */
-                height: 120vh;
-            transform-origin: center;
-        }
-}
-
-@media screen and (orientation: landscape) {
-    iframe {
-        width: 100vw; /* Use 200% width for mobile */
-        height: 120vh;
-            transform-origin: center;
-        }
-}
-    header {
-        padding: 5px 15px; /* Reduced padding */
-    }
-    iframe {
-            width: 200vw; /* Use 200% width for mobile */
-            height: 50vh; /* Maintain a reasonable height */
-            transform-origin: center;
-        }
-
-        #painting-game {
-                height: auto; /* Allow dynamic height on mobile */
-                padding: 10px;
+        @media (orientation: landscape) {
+            .painting-game iframe {
+                height: 50vh;
             }
-    header .logo {
-        font-size: 1rem; /* Slightly larger than previous 1rem for better readability */
-    }
+        }
+        @media (max-width: 768px)  {
+            header {
+                padding: 5px 15px; /* Reduced padding */
+            }
+            .painting-game iframe {
+            height: 50vh; /* Adjust for smaller screen sizes */
+            }   
 
-    header nav ul {
-        gap: 5px; /* Use gap instead of margins for better spacing control */
-    }
+            #painting-game {
+                    height: auto; /* Allow dynamic height on mobile */
+                    padding: 10px;
+                }
+            header .logo {
+                font-size: 1rem; /* Slightly larger than previous 1rem for better readability */
+            }
 
-    header nav ul li {
-        margin: 0; /* Remove existing margins */
-    }
+            header nav ul {
+                gap: 5px; /* Use gap instead of margins for better spacing control */
+            }
 
-    header nav ul li a {
-        font-size: 0.5rem; /* Smaller font size for nav items */
-        padding: 3px 6px; /* Add some padding for better touch targets */
-    }
-    .painting-game canvas {
-        max-width: 90%; /* Slightly reduce the width for smaller screens */
-    }
-    /* Adjust the content below header */
-    .hero {
-        margin-top: 0; /* Adjust based on new header height */
-    }
-}
+            header nav ul li {
+                margin: 0; /* Remove existing margins */
+            }
+
+            header nav ul li a {
+                font-size: 0.5rem; /* Smaller font size for nav items */
+                padding: 3px 6px; /* Add some padding for better touch targets */
+            }
+            .painting-game canvas {
+                max-width: 90%; /* Slightly reduce the width for smaller screens */
+            }
+            /* Adjust the content below header */
+            .hero {
+                margin-top: 0; /* Adjust based on new header height */
+            }
+        }   
 
     </style>
 </head>
@@ -410,177 +349,9 @@ header nav ul li a {
             }
         });
 
-// Painting Game
-const canvas = document.getElementById('paintCanvas');
-const ctx = canvas.getContext('2d');
-let painting = false;
-let tool = 'pen';
-const canvasBackgroundColor = '#fff';
-let lastX = 0;
-let lastY = 0;
-
-// Create an off-screen canvas to store the drawing
-const offScreenCanvas = document.createElement('canvas');
-const offScreenCtx = offScreenCanvas.getContext('2d');
-
-function setCanvasSize() {
-    const aspectRatio = 4 / 3; // Example aspect ratio (width/height)
-    const maxCanvasWidth = Math.min(window.innerWidth * 0.9, 500); // Limit max width
-    const canvasWidth = maxCanvasWidth;
-    const canvasHeight = canvasWidth / aspectRatio;
-
-    // Update canvas dimensions
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-
-    // Update off-screen canvas dimensions
-    offScreenCanvas.width = canvasWidth;
-    offScreenCanvas.height = canvasHeight;
-
-    // Fill canvas with the background color
-    ctx.fillStyle = canvasBackgroundColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    offScreenCtx.fillStyle = canvasBackgroundColor;
-    offScreenCtx.fillRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
-}
-
-
-function draw(e) {
-    if (!painting) return;
-    e.preventDefault();
-
-    const rect = canvas.getBoundingClientRect();
-    const x = (e.type.includes('touch') ? e.touches[0].clientX : e.clientX) - rect.left;
-    const y = (e.type.includes('touch') ? e.touches[0].clientY : e.clientY) - rect.top;
-
-    ctx.lineCap = 'round';
-    offScreenCtx.lineCap = 'round';
-
-    if (tool === 'pen') {
-        ctx.strokeStyle = '#ff9a9e';
-        ctx.lineWidth = 5;
-        offScreenCtx.strokeStyle = '#ff9a9e';
-        offScreenCtx.lineWidth = 5;
-    } else if (tool === 'eraser') {
-        ctx.strokeStyle = canvasBackgroundColor;
-        ctx.lineWidth = 20;
-        offScreenCtx.strokeStyle = canvasBackgroundColor;
-        offScreenCtx.lineWidth = 20;
-    }
-
-    // Draw on both canvases
-    [ctx, offScreenCtx].forEach(context => {
-        context.beginPath();
-        context.moveTo(lastX, lastY);
-        context.lineTo(x, y);
-        context.stroke();
-    });
-
-    lastX = x;
-    lastY = y;
-}
-function setCanvasSize() {
-    const rect = canvas.getBoundingClientRect();
-    
-    // Store current drawing
-    const currentDrawing = canvas.toDataURL();
-    
-    // Set main canvas size
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-    
-    // Set off-screen canvas size
-    offScreenCanvas.width = rect.width;
-    offScreenCanvas.height = rect.height;
-    
-    // Fill both canvases with background color
-    ctx.fillStyle = canvasBackgroundColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    offScreenCtx.fillStyle = canvasBackgroundColor;
-    offScreenCtx.fillRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
-    
-    // Restore drawing after resize
-    if (currentDrawing) {
-        const img = new Image();
-        img.onload = function() {
-            ctx.drawImage(img, 0, 0);
-            offScreenCtx.drawImage(img, 0, 0);
-        };
-        img.src = currentDrawing;
-    }
-}
-
-function startPosition(e) {
-    painting = true;
-    const rect = canvas.getBoundingClientRect();
-    lastX = (e.type.includes('touch') ? e.touches[0].clientX : e.clientX) - rect.left;
-    lastY = (e.type.includes('touch') ? e.touches[0].clientY : e.clientY) - rect.top;
-}
-
-function endPosition() {
-    painting = false;
-}
-
-// Add scroll handler to restore drawing
-function handleScroll() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = canvasBackgroundColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(offScreenCanvas, 0, 0);
-}
-
-function activateTool(selectedTool) {
-    tool = selectedTool;
-    document.querySelectorAll('.tool').forEach(button => {
-        button.classList.remove('active');
-    });
-    
-    if (tool === 'pen') {
-        document.getElementById('penTool').classList.add('active');
-    } else if (tool === 'eraser') {
-        document.getElementById('eraserTool').classList.add('active');
-    }
-}
-
-// Clear Canvas
-document.getElementById('clearCanvas').addEventListener('click', () => {
-    ctx.fillStyle = canvasBackgroundColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    offScreenCtx.fillStyle = canvasBackgroundColor;
-    offScreenCtx.fillRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
-});
-
-// Mouse Events
-canvas.addEventListener('mousedown', startPosition);
-canvas.addEventListener('mouseup', endPosition);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseleave', endPosition);
-
-// Touch Events
-canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    startPosition(e);
-});
-canvas.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    endPosition();
-});
-canvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    draw(e);
-});
-
-// Tool Selection
-document.getElementById('penTool').addEventListener('click', () => activateTool('pen'));
-document.getElementById('eraserTool').addEventListener('click', () => activateTool('eraser'));
 
 // Add scroll event listener
 window.addEventListener('scroll', handleScroll);
-// Initialize
-setCanvasSize();
-window.addEventListener('resize', setCanvasSize);
-window.addEventListener('orientationchange', setCanvasSize);
-
     </script>
 </body>
 </html>
