@@ -198,6 +198,7 @@ header nav ul li a {
             padding: 50px;
             background: #fff5f5;
             text-align: center;
+            overflow: hidden;
         }
  iframe {
             width: 100%;
@@ -261,8 +262,8 @@ header nav ul li a {
         padding: 5px 15px; /* Reduced padding */
     }
     iframe {
-                height: 70vh;
                 transform: rotate(90deg);
+                transform-origin: center;
             }
     header .logo {
         font-size: 1rem; /* Slightly larger than previous 1rem for better readability */
@@ -350,6 +351,11 @@ header nav ul li a {
     </footer>
 
     <script>
+         const iframe = document.querySelector('iframe');
+    iframe.onload = () => {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        iframeDoc.body.style.overflow = 'hidden'; // Disable scrolling inside the iframe
+    };
         const galleryImages = document.querySelectorAll('.gallery img');
         const popup = document.querySelector('.popup');
         const popupImage = document.querySelector('.popup img');
@@ -541,9 +547,6 @@ document.getElementById('eraserTool').addEventListener('click', () => activateTo
 
 // Add scroll event listener
 window.addEventListener('scroll', handleScroll);
-document.body.addEventListener('touchmove', function(e) {
-            e.preventDefault();
-        }, { passive: false });
 // Initialize
 setCanvasSize();
 window.addEventListener('resize', setCanvasSize);
