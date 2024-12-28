@@ -201,9 +201,13 @@ header nav ul li a {
             overflow: hidden;
         }
  iframe {
-            width: 100%;
-            height: 100vh;
+            width: 70vw;
+            height: 70vh;
             border: none;
+            transition: all 0.3s ease;
+        }
+        .painting-game iframe {
+            overflow: hidden;
         }
 
         .painting-game canvas {
@@ -262,8 +266,14 @@ header nav ul li a {
         padding: 5px 15px; /* Reduced padding */
     }
     iframe {
-                transform: rotate(90deg);
-                transform-origin: center;
+            width: 200vw; /* Use 200% width for mobile */
+            height: 50vh; /* Maintain a reasonable height */
+            transform-origin: center;
+        }
+
+        #painting-game {
+                height: auto; /* Allow dynamic height on mobile */
+                padding: 10px;
             }
     header .logo {
         font-size: 1rem; /* Slightly larger than previous 1rem for better readability */
@@ -328,7 +338,6 @@ header nav ul li a {
     <section id="painting-game" class="painting-game">
         <h2>Try Your Hand at Drawing!</h2>
         <iframe src="https://www.youidraw.com/apps/painter/"></iframe>
-
     </section>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -352,10 +361,12 @@ header nav ul li a {
 
     <script>
          const iframe = document.querySelector('iframe');
-    iframe.onload = () => {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        iframeDoc.body.style.overflow = 'hidden'; // Disable scrolling inside the iframe
-    };
+        iframe.onload = () => {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            if (iframeDoc) {
+                iframeDoc.body.style.overflow = 'hidden'; // Disable scrolling inside iframe content
+            }
+        };
         const galleryImages = document.querySelectorAll('.gallery img');
         const popup = document.querySelector('.popup');
         const popupImage = document.querySelector('.popup img');
