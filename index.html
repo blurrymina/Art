@@ -96,7 +96,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 50px;
-            padding: 50px;
+            padding: 40px;
             padding-top: 100px; 
         }
         .gallery  h1 {
@@ -209,25 +209,31 @@
             align-items: center;
             flex-direction: column;
         }
-
+        .painting-game  h2 {
+            color: #ff9a9e;
+            font-size: 4rem;
+            font-family: 'Dancing Script', cursive; /* Girly script font */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
         .painting-game iframe {
             width: 100%;
-            height: 60vh;  /* Default height for portrait */
-            max-width: 800px; /* Ensure iframe does not grow too wide */
-            border: none;
-            transition: all 0.3s ease;
+    height: calc(100vh - 100px); /* Account for header height */
+    max-width: 800px; /* Limit the width on larger screens */
+    max-height: 100%; /* Prevent overflow */
+    border: none;
+    transition: all 0.3s ease-in-out;
         }
 
         @media (orientation: landscape) {
             .painting-game iframe {
-                height: 70vh; /* Taller in landscape */
-                width: 85vw;  /* Make it wider in landscape */
+                height: calc(100vh - 60px); /* Adjust based on header/footer */
+        width: 85vw;  /* Make it wider in landscape */
             }
         }
         @media (orientation: portrait) {
             .painting-game iframe {
-                height: 70vh; /* Slightly taller in portrait */
-                width: 90vw;  /* Make it slightly wider in portrait */
+                height: calc(100vh - 60px); /* Adjust based on header/footer */
+                width: 85vw; /* Make it slightly wider in portrait */
             }
         }
         @media (max-width: 768px)  {
@@ -235,7 +241,8 @@
                 padding: 5px 15px; /* Reduced padding */
             }
             .painting-game iframe {
-            height: 50vh; /* Adjust for smaller screen sizes */
+                height: 80vh; /* Shrink for smaller screens */
+                width: 100%;  /* Adjust for smaller screen sizes */
             }   
 
             #painting-game {
@@ -325,13 +332,19 @@
     </footer>
 
     <script>
-         const iframe = document.querySelector('iframe');
-        iframe.onload = () => {
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            if (iframeDoc) {
-                iframeDoc.body.style.overflow = 'hidden'; // Disable scrolling inside iframe content
-            }
-        };
+        function adjustIframeSize() {
+    const iframe = document.querySelector('.painting-game iframe');
+    const headerHeight = document.querySelector('header').offsetHeight;
+
+    // Adjust iframe height dynamically
+    iframe.style.height = `${window.innerHeight - headerHeight}px`;
+    iframe.style.width = `${window.innerWidth}px`;
+}
+
+// Call adjustIframeSize on load and orientation change
+window.addEventListener('load', adjustIframeSize);
+window.addEventListener('resize', adjustIframeSize);
+
         const galleryImages = document.querySelectorAll('.gallery img');
         const popup = document.querySelector('.popup');
         const popupImage = document.querySelector('.popup img');
