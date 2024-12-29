@@ -217,23 +217,23 @@
         }
         .painting-game iframe {
             width: 100%;
-    height: calc(100vh - 100px); /* Account for header height */
-    max-width: 800px; /* Limit the width on larger screens */
-    max-height: 100%; /* Prevent overflow */
-    border: none;
-    transition: all 0.3s ease-in-out;
+            height: calc(100vh - 100px); /* Full height minus header */
+            max-width: 800px;
+            border: none;
+            transition: all 0.3s ease-in-out;
+            padding-top: 20px;
         }
 
         @media (orientation: landscape) {
             .painting-game iframe {
-                height: calc(100vh - 60px); /* Adjust based on header/footer */
-        width: 85vw;  /* Make it wider in landscape */
+                width: 85vw; /* Wider in landscape */
+                height: calc(100vh - 120px);
             }
         }
         @media (orientation: portrait) {
             .painting-game iframe {
-                height: calc(100vh - 60px); /* Adjust based on header/footer */
-                width: 85vw; /* Make it slightly wider in portrait */
+                width: 90vw; /* Slight margin for smaller screens */
+        height: calc(100vh - 150px); /* Account for header and potential padding */
             }
         }
         @media (max-width: 768px)  {
@@ -242,7 +242,7 @@
             }
             .painting-game iframe {
                 height: 80vh; /* Shrink for smaller screens */
-                width: 100%;  /* Adjust for smaller screen sizes */
+                width: 90%;  /* Adjust for smaller screen sizes */
             }   
 
             #painting-game {
@@ -332,18 +332,24 @@
     </footer>
 
     <script>
-        function adjustIframeSize() {
-    const iframe = document.querySelector('.painting-game iframe');
-    const headerHeight = document.querySelector('header').offsetHeight;
+       function adjustIframeSize() {
+            const iframe = document.querySelector('.painting-game iframe');
+            const headerHeight = document.querySelector('header').offsetHeight;
+            const isPortrait = window.innerHeight > window.innerWidth;
 
-    // Adjust iframe height dynamically
-    iframe.style.height = `${window.innerHeight - headerHeight}px`;
-    iframe.style.width = `${window.innerWidth}px`;
-}
+            if (isPortrait) {
+                iframe.style.width = '90vw';
+                iframe.style.height = `${window.innerHeight - headerHeight - 120}px`;
+            } else {
+                iframe.style.width = '85vw';
+                iframe.style.height = `${window.innerHeight - headerHeight - 30}px`;
+            }
+        }
 
-// Call adjustIframeSize on load and orientation change
-window.addEventListener('load', adjustIframeSize);
-window.addEventListener('resize', adjustIframeSize);
+        // Adjust iframe size on load and orientation change
+        window.addEventListener('load', adjustIframeSize);
+        window.addEventListener('resize', adjustIframeSize);
+
 
         const galleryImages = document.querySelectorAll('.gallery img');
         const popup = document.querySelector('.popup');
