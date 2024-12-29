@@ -225,7 +225,13 @@
             transition: all 0.3s ease-in-out;
             padding-top: 10px;
         }
+        #mobile-iframe {
+    display: none;
+}
 
+#desktop-iframe {
+    display: block;
+}
         @media (orientation: landscape) {
             .painting-game iframe {
                 width: 85vw; /* Wider in landscape */
@@ -239,6 +245,12 @@
             }
         }
         @media (max-width: 768px)  {
+            #mobile-iframe {
+        display: block;
+    }
+    #desktop-iframe {
+        display: none;
+    }
             header {
                 padding: 5px 15px; /* Reduced padding */
             }
@@ -311,9 +323,10 @@
     
     <section id="painting-game" class="painting-game">
         <h2>Try Your Hand at Drawing!</h2>
-        <iframe src="https://www.youidraw.com/apps/painter/"></iframe>
+        <iframe id="mobile-iframe" src="https://www.autodraw.com/"></iframe>
+        <iframe id="desktop-iframe" src="https://www.youidraw.com/apps/painter/"></iframe>
     </section>
-
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <section id="about" class="about">
