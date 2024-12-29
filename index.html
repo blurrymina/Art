@@ -191,7 +191,6 @@
             text-align: center;
             padding: 15px;
             margin-top: 20px;
-
         }
 
         footer p {
@@ -225,13 +224,6 @@
             transition: all 0.3s ease-in-out;
             padding-top: 10px;
         }
-        #mobile-iframe {
-    display: none;
-}
-
-#desktop-iframe {
-    display: block;
-}
         @media (orientation: landscape) {
             .painting-game iframe {
                 width: 85vw; /* Wider in landscape */
@@ -241,16 +233,10 @@
         @media (orientation: portrait) {
             .painting-game iframe {
                 width: 90vw; /* Slight margin for smaller screens */
-        height: calc(100vh - 150px); /* Account for header and potential padding */
+                height: calc(100vh - 150px); /* Account for header and potential padding */
             }
         }
         @media (max-width: 768px)  {
-            #mobile-iframe {
-        display: block;
-    }
-    #desktop-iframe {
-        display: none;
-    }
             header {
                 padding: 5px 15px; /* Reduced padding */
             }
@@ -323,8 +309,7 @@
     
     <section id="painting-game" class="painting-game">
         <h2>Try Your Hand at Drawing!</h2>
-        <iframe id="mobile-iframe" src="https://jspaint.app/"></iframe>
-        <iframe id="desktop-iframe" src="https://www.youidraw.com/apps/painter/"></iframe>
+        <iframe src="https://jspaint.app/"></iframe>
     </section>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -357,7 +342,7 @@
                 iframe.style.height = `${window.innerHeight - headerHeight - 120}px`;
             } else {
                 iframe.style.width = '85vw';
-                iframe.style.height = `${window.innerHeight - headerHeight - 30}px`;
+                iframe.style.height = `${window.innerHeight - headerHeight - 100}px`;
             }
         }
 
