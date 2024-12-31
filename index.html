@@ -19,7 +19,6 @@
             background-color: #fff8f8; /* Soft pastel background */
             overflow-x: hidden;   
         }
-
         header {
             position: fixed;
             top: 0;
@@ -27,7 +26,7 @@
             width: 100%;
             background: linear-gradient(45deg, #ff9a9e, #fad0c4);
             color: #fff;
-            padding: 3px 50px; /* Reduced from 20px */
+            padding: 3px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -37,16 +36,41 @@
         }
 
         header .logo {
-            font-size: 1.7rem; /* Reduced from 2rem */
+            font-size: 1.7rem;
             font-weight: 700;
             letter-spacing: 1px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
         }
 
+        .language-selector {
+            position: absolute;
+            left: 50%; /* Horizontally centers the language selector */
+            transform: translateX(-50%); /* Adjust for the selector's width */
+            display: flex;
+            align-items: center;
+        }
+
+        .language-selector select {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff9a9e;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .language-selector select:hover {
+            background-color: #f06292;
+        }
         header nav ul {
             list-style: none;
             display: flex;
         }
+
 
         header nav ul li {
             margin: 0 15px;
@@ -163,9 +187,10 @@
         }
 
         .about p {
-            font-size: 1rem;
+            font-size: 1.2rem;
             line-height: 1.6;
             color: #555;
+            font-family: 'Dancing Script', cursive;
         }
 
         .social {
@@ -278,45 +303,48 @@
 </head>
 <body>
     <header>
-        <div class="logo">Art by Mina 🤍</div>
+        
+        <div class="logo" data-key="logo">Art by Mina 🤍</div>
+        <div class="language-selector">
+            <select onchange="setLanguage(this.value)">
+                <option value="en">EN</option>
+                <option value="ar">AR</option>
+                <option value="fr">FR</option>
+            </select>
+        </div>
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#gallery">Gallery</a></li>
-                <li><a href="#painting-game">Draw</a></li>
-                <li><a href="#about">About</a></li>
+                <li><a href="#" data-key="home">Home</a></li>
+                <li><a href="#gallery" data-key="gallery">Gallery</a></li>
+                <li><a href="#painting-game" data-key="draw">Draw</a></li>
+                <li><a href="#about" data-key="about">About</a></li>
             </ul>
+            
         </nav>
+
     </header>
 
     <section class="hero">
         <div>
-            <h1>Welcome to My Art World</h1>
+            <h1 data-key="hero-welcome">Welcome to My Art World</h1>
         </div>
     </section>
     <section id="gallery" class="gallery">
-        <h1>Gallery</h1>
+        <h1 data-key="gallery-title">Gallery</h1>
         <img src="Images/0.PNG" alt="Artwork 1">
         <img src="Images/1.PNG" alt="Artwork 2">
         <img src="Images/2.PNG" alt="Artwork 3">
         <img src="Images/3.PNG" alt="Artwork 4">
     </section>
 
-    <div class="popup">
-        <span class="close">&times;</span>
-        <img src="" alt="Popup Image">
-    </div>
-    
     <section id="painting-game" class="painting-game">
-        <h2>Try Your Hand at Drawing!</h2>
+        <h2 data-key="drawing-title">Try Your Hand at Drawing!</h2>
         <iframe src="https://jspaint.app/"></iframe>
     </section>
-    
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <section id="about" class="about">
-        <h2>About the Artist</h2>
-        <p>Mina is a passionate artist who loves expressing emotions through vibrant colors and unique styles. Each painting tells a story and reflects a piece of her soul.</p>
+        <h2 data-key="about-title">About the Artist</h2>
+        <p data-key="about-description">Mina is a passionate artist who loves expressing emotions through vibrant colors and unique styles. Each painting tells a story and reflects a piece of her soul.</p>
         <div class="social">
             <a href="https://www.instagram.com/blurryminah/" target="_blank" aria-label="Instagram">
                 <i class="fab fa-instagram"></i>
@@ -328,10 +356,62 @@
     </section>
 
     <footer>
-        <p>&copy; 2025 Art by Mina. All rights reserved.</p>
+        <p data-key="footer-text">&copy; 2025 Art by Mina. All rights reserved.</p>
     </footer>
-
     <script>
+ const translations = {
+            en: {
+                logo: "Art by Mina 🤍",
+                home: "Home",
+                gallery: "Gallery",
+                draw: "Draw",
+                about: "About",
+                "hero-welcome": "Welcome to My Art World",
+                "gallery-title": "Gallery",
+                "drawing-title": "Try Your Hand at Drawing !",
+                "about-title": "About the Artist",
+                "about-description": "Mina is a passionate artist who loves expressing emotions through vibrant colors and unique styles. Each painting tells a story and reflects a piece of her soul.",
+                "footer-text": "&copy; 2025 Art by Mina. All rights reserved."
+            },
+            ar: {
+                logo: "الفن مع مينا 🤍",
+                home: "الرئيسية",
+                gallery: "المعرض",
+                draw: "ارسم",
+                about: "عن الفنان",
+                "hero-welcome": "مرحبا بكم في عالمي الفني",
+                "gallery-title": "المعرض",
+                "drawing-title": "! جرب الرسم",
+                "about-title": "عن الفنان",
+                "about-description": ".مينا فنانة شغوفة تحب التعبير عن المشاعر من خلال الألوان النابضة بالحياة والأساليب الفريدة. تحكي كل لوحة قصة وتعكس قطعة من روحها",
+                "footer-text": "&copy; 2025 فن بواسطة مينا.كل الحقوق محفوظة"
+            },
+            fr: {
+                logo: "Art par Mina 🤍",
+                home: "Accueil",
+                gallery: "Galerie",
+                draw: "Dessiner",
+                about: "À propos",
+                "hero-welcome": "Bienvenue dans Mon Monde Artistique",
+                "gallery-title": "Galerie",
+                "drawing-title": "Essayez de Dessiner !",
+                "about-title": "À propos de l'artiste",
+                "about-description": "Mina est une artiste passionnée qui aime exprimer des émotions à travers des couleurs vibrantes et des styles uniques. Chaque peinture raconte une histoire et reflète un morceau de son âme.",
+                "footer-text": "&copy; 2025 Art par Mina. Tous droits réservés."
+            }
+        };
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll("[data-key]");
+            elements.forEach(el => {
+                const key = el.getAttribute("data-key");
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+        }
+        setLanguage('en');
+
        function adjustIframeSize() {
             const iframe = document.querySelector('.painting-game iframe');
             const headerHeight = document.querySelector('header').offsetHeight;
