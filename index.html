@@ -118,26 +118,30 @@
         }
 
         .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 50px;
+            display: flex; /* Use Flexbox for layout */
+            flex-wrap: wrap; /* Allow wrapping to the next line */
+            gap: 20px; /* Space between images */
             padding: 40px;
-            padding-top: 70px; 
+            padding-top: 70px;
+            justify-content: center; /* Center the gallery horizontally */
         }
-        .gallery  h1 {
+        .gallery h1 {
             color: #ff9a9e;
             font-size: 4rem;
             font-family: 'Dancing Script', cursive; /* Girly script font */
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+            width: 100%; /* Make sure the heading takes a full row */
+            text-align: center; /* Center-align the text */
         }
         .gallery img {
-            width: 100%;
-            height: auto;
+            max-width: 100%; /* Ensure the image fits within its container */
+            max-height: 300px; /* Set a maximum height for the image */
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s, box-shadow 0.3s;
+            object-fit: contain; /* Preserve the image's aspect ratio */
+            margin: auto; /* Center the image within its container if needed */
         }
-
         .gallery img:hover {
             transform: scale(1.05);
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
@@ -159,6 +163,7 @@
         .popup img {
             max-width: 90%;
             max-height: 90%;
+            object-fit: contain; /* Ensures the image scales proportionally */
             border-radius: 10px;
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
         }
@@ -171,7 +176,6 @@
             color: #fff;
             cursor: pointer;
         }
-
         .about {
             padding: 50px;
             background: #fef9f9;
@@ -335,12 +339,18 @@
             <h1 data-key="hero-welcome">Welcome to My Art World</h1>
         </div>
     </section>
+
     <section id="gallery" class="gallery">
         <h1 data-key="gallery-title">Gallery</h1>
         <img src="Images/0.PNG" alt="Artwork 1">
         <img src="Images/1.PNG" alt="Artwork 2">
         <img src="Images/2.PNG" alt="Artwork 3">
         <img src="Images/3.PNG" alt="Artwork 4">
+
+        <div class="popup">
+            <span class="close">&times;</span>
+            <img src="" alt="Popup Artwork">
+        </div>
     </section>
 
     <section id="painting-game" class="painting-game">
@@ -365,7 +375,7 @@
         <p data-key="footer-text">&copy; 2025 Art by Mina. All rights reserved.</p>
     </footer>
     <script>
- const translations = {
+            const translations = {
             en: {
                 logo: "Art by Mina 🤍",
                 home: "Home",
@@ -438,9 +448,16 @@
 
 
         const galleryImages = document.querySelectorAll('.gallery img');
-        const popup = document.querySelector('.popup');
-        const popupImage = document.querySelector('.popup img');
-        const closePopup = document.querySelector('.popup .close');
+        const popup = document.createElement('div');
+        popup.className = 'popup';
+        popup.innerHTML = `
+            <img />
+            <span class="close">&times;</span>
+        `;
+        document.body.appendChild(popup);
+
+        const popupImage = popup.querySelector('img');
+        const closePopup = popup.querySelector('.close');
 
         galleryImages.forEach(img => {
             img.addEventListener('click', () => {
@@ -452,6 +469,13 @@
         closePopup.addEventListener('click', () => {
             popup.style.display = 'none';
         });
+
+        popup.addEventListener('click', e => {
+            if (e.target === popup) {
+                popup.style.display = 'none';
+            }
+        });
+
 
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header');
