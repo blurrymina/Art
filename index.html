@@ -85,6 +85,9 @@
             transition: color 0.3s;
             font-family: 'Dancing Script', cursive;
         }
+         header nav ul li a:hover {
+            color: #3f3a3a; /* Highlight color on hover */
+        }
         .hero {
             height: 70vh;
             display: flex;
@@ -133,6 +136,25 @@
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
             width: 100%; /* Make sure the heading takes a full row */
             text-align: center; /* Center-align the text */
+        }
+        .gallery button {
+            color: #fff; /* Make the text color white for better contrast */
+            font-size: 1.5rem; /* Adjust font size for readability */
+            font-family: 'Dancing Script', cursive; /* Girly script font */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Softer shadow for text */
+            display: inline-block; /* Keep it block-level but not full width */
+            margin: 20px auto; /* Center the button and add spacing */
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4); /* Gradient background */
+            border: 2px solid rgba(255, 255, 255, 0.7); /* Subtle border to differentiate from images */
+            border-radius: 12px; /* Round the corners */
+            padding: 10px 30px; /* Balanced padding for better proportions */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Softer shadow for distinction */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+        }
+        .gallery button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
         }
         .gallery img {
             max-width: 100%; /* Ensure the image fits within its container */
@@ -344,6 +366,9 @@
 
     <section id="gallery" class="gallery">
         <h1 data-key="gallery-title">Gallery</h1>
+        <button data-key="gallery-random" id="randomImageBtn">
+            Show A Random Artwork
+        </button>
         <img src="Images/0.PNG" alt="Artwork 1">
         <img src="Images/1.PNG" alt="Artwork 2">
         <img src="Images/2.PNG" alt="Artwork 3">
@@ -386,6 +411,7 @@
                 about: "About",
                 "hero-welcome": "Welcome to My Art World",
                 "gallery-title": "Gallery",
+                "gallery-random": "Show A Random Artwork",
                 "drawing-title": "Try Your Hand at Drawing !",
                 "about-title": "About the Artist",
                 "about-description": "Mina is a passionate artist who loves expressing emotions through vibrant colors and unique styles. Each painting tells a story and reflects a piece of her soul.",
@@ -399,6 +425,7 @@
                 about: "عن الفنان",
                 "hero-welcome": "مرحبا بكم في عالمي الفني",
                 "gallery-title": "المعرض",
+                "gallery-random": "عرض عمل فني عشوائي",
                 "drawing-title": "! جرب الرسم",
                 "about-title": "عن الفنان",
                 "about-description": "مينا فنانة شغوفة تحب التعبير عن المشاعر من خلال الألوان النابضة بالحياة والأساليب الفريدة. تحكي كل لوحة قصة وتعكس قطعة من روحها",
@@ -412,6 +439,7 @@
                 about: "À propos",
                 "hero-welcome": "Bienvenue dans Mon Monde Artistique",
                 "gallery-title": "Galerie",
+                "gallery-random": "Afficher une œuvre d’art aléatoire",
                 "drawing-title": "Essayez de Dessiner !",
                 "about-title": "À propos de l'artiste",
                 "about-description": "Mina est une artiste passionnée qui aime exprimer des émotions à travers des couleurs vibrantes et des styles uniques. Chaque peinture raconte une histoire et reflète un morceau de son âme.",
@@ -425,6 +453,7 @@
                 about: "작가 소개",
                 "hero-welcome": "나의 예술 세계에 오신 것을 환영합니다",
                 "gallery-title": "갤러리",
+                "gallery-random": "무작위 아트웍 표시",
                 "drawing-title": "그리기 시도해보기 !",
                 "about-title": "작가 소개",
                 "about-description": "미나는 감정을 색감과 독특한 스타일로 표현하는 예술가입니다. 그녀의 그림 하나하나에는 이야기가 담겨있고, 그녀의 영혼이 녹아 있습니다.",
@@ -491,6 +520,14 @@
             }
         });
 
+        const totalImages = 4; // Set the total number of images statically
+        const randomImageBtn = document.getElementById('randomImageBtn');
+
+        randomImageBtn.addEventListener('click', () => {
+            const randomIndex = Math.floor(Math.random() * totalImages); 
+            popupImage.src = `Images/${randomIndex}.PNG`; 
+            popup.style.display = 'flex';
+        });
 
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header');
