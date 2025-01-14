@@ -106,53 +106,89 @@
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
         }
         .gallery {
-            display: flex; 
-            flex-wrap: wrap;
+            display: flex;
+            flex-direction: column; 
+            align-items: center; 
             gap: 20px; 
             padding: 40px;
             padding-top: 70px;
-            justify-content: center; 
             animation: fadeIn 1.5s;
         }
         .gallery h1 {
             color: #ff9a9e;
             font-size: 4rem;
-            font-family: 'Dancing Script', cursive; 
+            font-family: 'Dancing Script', cursive;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-            width: 100%; 
             text-align: center;
+            margin-bottom: 20px;
         }
         .gallery button {
-            color: #fff; 
-            font-size: 1.5rem; 
-            -webkit-tap-highlight-color: transparent;
-            font-family: 'Dancing Script', cursive; 
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            display: inline-block; 
-            margin: 20px auto; 
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4); 
-            border: 2px solid rgba(255, 255, 255, 0.7); 
-            border-radius: 12px; 
-            padding: 10px 30px; 
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
-            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            color: #fff;
+            font-size: 1.3rem;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            border: none;
+            border-radius: 5px;
+            padding: 15px 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
         .gallery button:hover {
             transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
         }
-        .gallery img {
-            max-width: 100%; 
-            max-height: 300px; 
+        #gallery-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; 
+            gap: 50px; 
+            margin-bottom: 20px; 
+            margin-top: 20px; 
+        }
+        #gallery-container img {
+            max-width: 100%;
+            max-height: 300px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s, box-shadow 0.3s;
-            object-fit: contain;
-            margin: auto; 
+            object-fit: cover;
         }
-        .gallery img:hover {
+        .lazy-load {
+            max-width: 100%;
+            max-height: 300px;
+            background-color: #ccc;
+            object-fit: cover;
+        }
+        .lazy-load:empty {
+            background-image: url('root/Load.gif');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        #gallery-container img:hover {
             transform: scale(1.05);
             box-shadow: 0 0 20px 10px rgba(255, 154, 158, 0.4);
+        }
+        #pagination-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px; 
+        }
+        #pagination-controls button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 100px;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            color: #fff;
+            cursor: pointer;
+        }
+        #pagination-controls button.active {
+            background: linear-gradient(45deg, #ec5a8b, #fad0c4);
+
+        }
+        #pagination-controls button:hover {
+            background: linear-gradient(45deg, #fad0c4, #fad0c4);
         }
         .popup {
             position: fixed;
@@ -269,9 +305,20 @@
                 font-size: 0.5rem; 
                 border-radius: 2px; 
             }
-            .gallery img {
+            #gallery-container img  {
                 max-width: 100%; 
-                max-height: 105px; 
+                max-height: 100px; 
+            }
+            .lazy-load {
+                max-width: 100%;
+                max-height: 100px;
+            }
+            .gallery button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+            #pagination-controls button {
+                padding: 5px 7px;
             }
             header {
                 padding: 5px 15px; 
@@ -333,10 +380,8 @@
         <button data-key="gallery-random" id="randomImageBtn">
             Show A Random Artwork
         </button>
-        <img src="Images/0.PNG" alt="Artwork 1">
-        <img src="Images/1.PNG" alt="Artwork 2">
-        <img src="Images/2.PNG" alt="Artwork 3">
-        <img src="Images/3.PNG" alt="Artwork 4">
+        <div id="gallery-container"></div>
+        <div id="pagination-controls"></div>
         <div class="popup">
             <span class="close">&times;</span>
             <img src="" alt="Popup Artwork">
@@ -344,7 +389,7 @@
     </section>
     <section id="painting-game" class="painting-game">
         <h2 data-key="drawing-title">Try Your Hand at Drawing!</h2>
-        <iframe src="https://jspaint.app/"></iframe>
+        <iframe src="https://jspaint.app"></iframe>
     </section>
     <section id="about" class="about">
         <h2 data-key="about-title">About the Artist</h2>
@@ -430,6 +475,99 @@
             });
         }
         setLanguage('en');
+        const galleryData = [
+            "Images/0.PNG",
+            "Images/1.PNG",
+            "Images/2.PNG",
+            "Images/3.PNG",
+        ];
+        const itemsPerPage = 2; 
+        let currentPage = 1;
+        const maxPagesToShow = 5;
+        function renderGalleryPage(page) {
+            const galleryContainer = document.getElementById('gallery-container');
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, galleryData.length);
+            let newContent = '';
+            for (let i = startIndex; i < endIndex; i++) {
+                const placeholderSrc = 'root/Load.gif'; 
+                newContent += `<img src="${placeholderSrc}" data-src="${galleryData[i]}" alt="Artwork ${i + 1}" class="lazy-load">`;
+            }
+            galleryContainer.innerHTML = newContent;
+            const images = galleryContainer.getElementsByTagName('img');
+            for (let img of images) {
+                img.addEventListener('click', () => {
+                    popupImage.src = img.src;
+                    popup.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+            initLazyLoad();
+            renderPaginationControls(page);
+        }
+        function initLazyLoad() {
+            const lazyImages = document.querySelectorAll('.lazy-load');
+            lazyImages.forEach(img => {
+                img.src = 'root/Load.gif';  
+                img.addEventListener('load', () => {
+                    clearTimeout(img.delayTimeout);
+                    img.delayTimeout = setTimeout(() => {
+                        img.src = img.getAttribute('data-src'); 
+                    }, 300); 
+                });
+                img.addEventListener('error', () => {
+                    console.error(`Failed to load image at ${img.getAttribute('data-src')}`);
+                });
+            });
+        }
+        function navigateToPage(page) {
+            currentPage = page;
+            renderGalleryPage(page);
+        }
+        function renderPaginationControls(page) {
+            const paginationControls = document.getElementById('pagination-controls');
+            paginationControls.innerHTML = '';
+            const totalPages = Math.ceil(galleryData.length / itemsPerPage);
+            let startPage, endPage;
+            if (totalPages <= maxPagesToShow) {
+                startPage = 1;
+                endPage = totalPages;
+            } else {
+                if (page <= Math.ceil(maxPagesToShow / 2)) {
+                    startPage = 1;
+                    endPage = maxPagesToShow;
+                } else if (page + Math.floor(maxPagesToShow / 2) >= totalPages) {
+                    startPage = totalPages - maxPagesToShow + 1;
+                    endPage = totalPages;
+                } else {
+                    startPage = page - Math.floor(maxPagesToShow / 2);
+                    endPage = page + Math.floor(maxPagesToShow / 2);
+                }
+            }
+            if (startPage > 1) {
+                const firstButton = document.createElement('button');
+                firstButton.textContent = 'Start';
+                firstButton.addEventListener('click', () => navigateToPage(1));
+                paginationControls.appendChild(firstButton);
+            }
+            for (let i = startPage; i <= endPage; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.className = i === page ? 'active' : '';
+                button.addEventListener('click', () => {
+                    currentPage = i;
+                    navigateToPage(i);
+                });
+                paginationControls.appendChild(button);
+            }
+            if (endPage < totalPages) {
+                const lastButton = document.createElement('button');
+                lastButton.textContent = 'End';
+                lastButton.addEventListener('click', () => navigateToPage(totalPages));
+                paginationControls.appendChild(lastButton);
+            }
+        }
+        navigateToPage(currentPage);
         function adjustIframeSize() {
             const iframe = document.querySelector('.painting-game iframe');
             const headerHeight = document.querySelector('header').offsetHeight;
@@ -473,10 +611,9 @@
             }
         });
         const totalImages = document.querySelectorAll('.gallery img').length-1;
-        const randomImageBtn = document.getElementById('randomImageBtn');
         randomImageBtn.addEventListener('click', () => {
-            const randomIndex = Math.floor(Math.random() * totalImages); 
-            popupImage.src = `Images/${randomIndex}.PNG`; 
+            const randomIndex = Math.floor(Math.random() * galleryData.length);
+            popupImage.src = galleryData[randomIndex]; 
             popup.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         });
