@@ -644,6 +644,9 @@
             }
         }); 
         let lastScroll = 0;
+let touchStartY = 0;
+let isTouching = false;
+
 document.addEventListener('DOMContentLoaded', () => {
     let isScrolling = false;
     let animationFrameId = null;
@@ -652,8 +655,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Configuration options
     const SCROLL_SPEED = 0.05;
-    const MIN_DISTANCE = 0.5; // Reduced for more precise stopping
+    const MIN_DISTANCE = 0.5;
     const SCROLL_TIMEOUT = 100;
+    
+    // Check if device is mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     const disableNavLinks = () => {
         navLinks.forEach(link => {
@@ -684,6 +690,27 @@ document.addEventListener('DOMContentLoaded', () => {
         enableNavLinks();
     };
 
+    // Prevent default touch move behavior
+    document.addEventListener('touchmove', (e) => {
+        if (isScrolling) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    // Handle touch start
+    document.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].pageY;
+        isTouching = true;
+        if (isScrolling) {
+            forceStopScrolling();
+        }
+    }, { passive: true });
+
+    // Handle touch end
+    document.addEventListener('touchend', () => {
+        isTouching = false;
+    }, { passive: true });
+
     let lastScrollPos = window.scrollY;
     document.addEventListener('scroll', () => {
         if (scrollTimeout) {
@@ -691,7 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         scrollTimeout = setTimeout(() => {
-            if (lastScrollPos === window.scrollY && isScrolling) {
+            if (lastScrollPos === window.scrollY && isScrolling && !isTouching) {
                 forceStopScrolling();
             }
         }, SCROLL_TIMEOUT);
@@ -702,6 +729,13 @@ document.addEventListener('DOMContentLoaded', () => {
     navLinks.forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            // Close mobile menu if it exists
+            const mobileMenu = document.querySelector('.mobile-menu, #mobile-menu, [data-mobile-menu]');
+            if (mobileMenu && window.innerWidth < 768) {
+                mobileMenu.classList.remove('active', 'show', 'open');
+                mobileMenu.style.display = 'none';
+            }
             
             if (isScrolling) {
                 forceStopScrolling();
@@ -720,7 +754,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isScrolling = true;
             disableNavLinks();
             
-            // Calculate exact target position
             const targetRect = target.getBoundingClientRect();
             const targetTop = targetRect.top + window.scrollY;
             
@@ -729,7 +762,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let lastTime = performance.now();
             
             const scrollStep = (currentTime) => {
-                if (!isScrolling) {
+                if (!isScrolling || isTouching) {
                     forceStopScrolling();
                     return;
                 }
@@ -762,7 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 
-                const step = remainingDistance * SCROLL_SPEED;
+                const step = remainingDistance * (isMobile ? SCROLL_SPEED * 1.5 : SCROLL_SPEED);
                 const newScrollPosition = currentScroll + step;
                 
                 if (newScrollPosition >= 0 && 
@@ -774,13 +807,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
             
-            animationFrameId = requestAnimationFrame(scrollStep);
+            // Add small delay for mobile to allow menu closing
+            if (isMobile) {
+                setTimeout(() => {
+                    animationFrameId = requestAnimationFrame(scrollStep);
+                }, 50);
+            } else {
+                animationFrameId = requestAnimationFrame(scrollStep);
+            }
+
             setTimeout(forceStopScrolling, 2500);
         });
     });
     
+    // Handle all interruptions
     document.addEventListener('wheel', forceStopScrolling, { passive: true });
-    document.addEventListener('touchstart', forceStopScrolling, { passive: true });
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             forceStopScrolling();
@@ -788,6 +829,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.addEventListener('beforeunload', forceStopScrolling);
+    
+    // Handle orientation change
+    window.addEventListener('orientationchange', () => {
+        if (isScrolling) {
+            forceStopScrolling();
+        }
+    });
 });
         //
         document.addEventListener('DOMContentLoaded', () => {
