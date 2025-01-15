@@ -644,42 +644,152 @@
             }
         }); 
         let lastScroll = 0;
-        document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('header nav ul li a').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
+document.addEventListener('DOMContentLoaded', () => {
+    let isScrolling = false;
+    let animationFrameId = null;
+    let scrollTimeout = null;
+    const navLinks = document.querySelectorAll('header nav ul li a');
+    
+    // Configuration options
+    const SCROLL_SPEED = 0.05;
+    const MIN_DISTANCE = 0.5; // Reduced for more precise stopping
+    const SCROLL_TIMEOUT = 100;
+    
+    const disableNavLinks = () => {
+        navLinks.forEach(link => {
+            link.style.pointerEvents = 'none';
+            link.style.opacity = '0.5';
+        });
+    };
+    
+    const enableNavLinks = () => {
+        navLinks.forEach(link => {
+            link.style.pointerEvents = 'auto';
+            link.style.opacity = '1';
+        });
+        isScrolling = false;
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+    };
 
-            const href = this.getAttribute('href');
-            if (href !== "#" && href !== "") {
-                const target = document.querySelector(href);
-                if (target) {
-                    const targetTop = target.getBoundingClientRect().top + window.scrollY;
-                    const startPosition = window.scrollY;
-                    const distance = targetTop - startPosition;
-                    const speed = 0.8; // Fixed speed factor, adjust this for better feel
+    const forceStopScrolling = () => {
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+        enableNavLinks();
+    };
 
-                    let startTime = null;
-
-                    function scrollStep(timestamp) {
-                        if (!startTime) startTime = timestamp;
-                        const progress = timestamp - startTime;
-
-                        // Calculate the scroll amount
-                        let step = distance * Math.min(progress / 1000, 1); // Speed can be controlled by 'progress / 1000'
-                        window.scrollTo(0, startPosition + step);
-
-                        if (progress < 1000) { // 1000 ms = 1 second scroll time
-                            requestAnimationFrame(scrollStep);
-                        }
-                    }
-
-                    requestAnimationFrame(scrollStep);
-                }
+    let lastScrollPos = window.scrollY;
+    document.addEventListener('scroll', () => {
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        
+        scrollTimeout = setTimeout(() => {
+            if (lastScrollPos === window.scrollY && isScrolling) {
+                forceStopScrolling();
             }
+        }, SCROLL_TIMEOUT);
+        
+        lastScrollPos = window.scrollY;
+    }, { passive: true });
+    
+    navLinks.forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (isScrolling) {
+                forceStopScrolling();
+                return;
+            }
+            
+            const href = this.getAttribute('href');
+            if (!href || href === '#') return;
+            
+            const target = document.querySelector(href);
+            if (!target) {
+                console.warn('Target element not found:', href);
+                return;
+            }
+            
+            isScrolling = true;
+            disableNavLinks();
+            
+            // Calculate exact target position
+            const targetRect = target.getBoundingClientRect();
+            const targetTop = targetRect.top + window.scrollY;
+            
+            let lastPos = window.scrollY;
+            let stuckCount = 0;
+            let lastTime = performance.now();
+            
+            const scrollStep = (currentTime) => {
+                if (!isScrolling) {
+                    forceStopScrolling();
+                    return;
+                }
+
+                const deltaTime = currentTime - lastTime;
+                lastTime = currentTime;
+
+                const currentScroll = window.scrollY;
+                const remainingDistance = targetTop - currentScroll;
+                
+                if (currentScroll === lastPos) {
+                    stuckCount++;
+                    if (stuckCount > 5) {
+                        window.scrollTo(0, targetTop);
+                        forceStopScrolling();
+                        return;
+                    }
+                } else {
+                    stuckCount = 0;
+                }
+                
+                lastPos = currentScroll;
+                
+                if (Math.abs(remainingDistance) <= MIN_DISTANCE) {
+                    window.scrollTo({
+                        top: targetTop,
+                        behavior: 'auto'
+                    });
+                    forceStopScrolling();
+                    return;
+                }
+                
+                const step = remainingDistance * SCROLL_SPEED;
+                const newScrollPosition = currentScroll + step;
+                
+                if (newScrollPosition >= 0 && 
+                    newScrollPosition <= document.documentElement.scrollHeight - window.innerHeight) {
+                    window.scrollTo(0, newScrollPosition);
+                    animationFrameId = requestAnimationFrame(scrollStep);
+                } else {
+                    forceStopScrolling();
+                }
+            };
+            
+            animationFrameId = requestAnimationFrame(scrollStep);
+            setTimeout(forceStopScrolling, 2500);
         });
     });
-});
+    
+    document.addEventListener('wheel', forceStopScrolling, { passive: true });
+    document.addEventListener('touchstart', forceStopScrolling, { passive: true });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            forceStopScrolling();
+        }
+    });
 
+    window.addEventListener('beforeunload', forceStopScrolling);
+});
+        //
         document.addEventListener('DOMContentLoaded', () => {
         const animatedElements = document.querySelectorAll('.section-right, .section-left');
         const observerOptions = {
