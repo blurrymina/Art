@@ -102,29 +102,9 @@
         }
         .section-right {
             position: relative;
-            transform: translateX(100%);
-            animation: slideInFromRight 1s forwards;
         }
         .section-left {
             position: relative;
-            transform: translateX(-100%);
-            animation: slideInFromLeft 1s forwards;
-        }
-        @keyframes slideInFromLeft {
-            from {
-                transform: translateX(-100%);
-            }
-            to {
-                transform: translateX(0);
-            }
-        }
-        @keyframes slideInFromRight {
-            from {
-                transform: translateX(100%);
-            }
-            to {
-                transform: translateX(0);
-            }
         }
         @keyframes fadeIn {
             from {
@@ -663,39 +643,46 @@
                 header.style.background = 'linear-gradient(45deg, #ff9a9e, #fad0c4)';
             }
         }); 
-        document.querySelectorAll('header nav ul li a').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                //e.preventDefault(); 
-                const href = this.getAttribute('href');
-                if (href !== "#" && href !== "") {
-                    const target = document.querySelector(href);
-                    if (target) {
-                        const targetTop = target.getBoundingClientRect().top + window.scrollY;
-                        const startPosition = window.scrollY;
-                        const distance = targetTop - startPosition;
-                        const duration = 1000; 
-                        let startTime = null;
-                        function animateScroll(currentTime) {
-                            if (!startTime) startTime = currentTime;
-                            const timeElapsed = currentTime - startTime;
-                            const run = easeInOutQuad(timeElapsed, startPosition, distance, duration);
-                            window.scrollTo(0, run);
+        let lastScroll = 0;
+document.querySelectorAll('header nav ul li a').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        // Throttle the scroll events
+        if (Date.now() - lastScroll < 1000) return; 
+        lastScroll = Date.now();
+        
+        const href = this.getAttribute('href');
+        if (href !== "#" && href !== "") {
+            const target = document.querySelector(href);
+            if (target) {
+                const targetTop = target.getBoundingClientRect().top + window.scrollY;
+                const startPosition = window.scrollY;
+                const distance = targetTop - startPosition;
+                const duration = 1000; 
+                let startTime = null;
 
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animateScroll);
-                            }
-                        }
-                        function easeInOutQuad(t, b, c, d) {
-                            t /= d / 2;
-                            if (t < 1) return (c / 2) * t * t + b;
-                            t--;
-                            return (-c / 2) * (t * (t - 2) - 1) + b;
-                        }
+                function animateScroll(currentTime) {
+                    if (!startTime) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    const run = easeInOutQuad(timeElapsed, startPosition, distance, duration);
+                    window.scrollTo(0, run);
+
+                    if (timeElapsed < duration) {
                         requestAnimationFrame(animateScroll);
                     }
                 }
-            });
-        });
+
+                function easeInOutQuad(t, b, c, d) {
+                    t /= d / 2;
+                    if (t < 1) return (c / 2) * t * t + b;
+                    t--;
+                    return (-c / 2) * (t * (t - 2) - 1) + b;
+                }
+                requestAnimationFrame(animateScroll);
+            }
+        }
+    });
+});
+
         document.addEventListener('DOMContentLoaded', () => {
         const animatedElements = document.querySelectorAll('.section-right, .section-left');
         const observerOptions = {
