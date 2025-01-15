@@ -100,6 +100,32 @@
             padding: 20px;
             animation: fadeIn 1.5s;
         }
+        .section-right {
+            position: relative;
+            transform: translateX(100%);
+            animation: slideInFromRight 1s forwards;
+        }
+        .section-left {
+            position: relative;
+            transform: translateX(-100%);
+            animation: slideInFromLeft 1s forwards;
+        }
+        @keyframes slideInFromLeft {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideInFromRight {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -384,23 +410,23 @@
     </header>
     <section id="hero" class="hero">
         <div>
-            <h1 data-key="hero-welcome">Welcome to My Art World</h1>
+            <h1 data-key="hero-welcome" class="section-right">Welcome to My Art World</h1>
         </div>
     </section>
     <section id="gallery" class="gallery">
-        <h1 data-key="gallery-title">Gallery</h1>
+        <h1 data-key="gallery-title" class="section-left">Gallery</h1>
         <button data-key="gallery-random" id="randomImageBtn">
             Show A Random Artwork
         </button>
         <div id="gallery-container"></div>
-        <div id="pagination-controls"></div>
+        <div id="pagination-controls" class="section-right"></div>
         <div class="popup">
             <span class="close">&times;</span>
             <img src="" alt="Popup Artwork">
         </div>
     </section>
     <section id="painting-game" class="painting-game">
-        <h2 data-key="drawing-title">Try Your Hand at Drawing!</h2>
+        <h2 data-key="drawing-title" class="section-left">Try Your Hand at Drawing!</h2>
         <iframe src="https://jspaint.app"></iframe>
     </section>
     <section id="about" class="about">
@@ -670,6 +696,30 @@
                 }
             });
         });
+        document.addEventListener('DOMContentLoaded', () => {
+        const animatedElements = document.querySelectorAll('.section-right, .section-left');
+        const observerOptions = {
+            root: null,
+            rootMargin: '-50px',
+            threshold: [0, 0.5, 1]
+        };
+        const observerCallback = (entries) => {
+            entries.forEach(entry => {
+                const element = entry.target;
+                if (entry.isIntersecting) {
+                    element.style.transition = 'opacity 1.5s ease';
+                    element.style.opacity = '1';
+                } else {
+                    element.style.transition = 'none';
+                    element.style.opacity = '0';
+                }
+            });
+        };
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        animatedElements.forEach(element => {
+            observer.observe(element);
+        });
+    });
     </script>
 </body>
 </html>
