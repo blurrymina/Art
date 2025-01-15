@@ -100,6 +100,9 @@
             padding: 20px;
             animation: fadeIn 1.5s;
         }
+        .section-fade {
+            position: relative;
+        }
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -384,23 +387,23 @@
     </header>
     <section id="hero" class="hero">
         <div>
-            <h1 data-key="hero-welcome">Welcome to My Art World</h1>
+            <h1 data-key="hero-welcome" class="section-fade">Welcome to My Art World</h1>
         </div>
     </section>
     <section id="gallery" class="gallery">
-        <h1 data-key="gallery-title">Gallery</h1>
+        <h1 data-key="gallery-title" class="section-fade">Gallery</h1>
         <button data-key="gallery-random" id="randomImageBtn">
             Show A Random Artwork
         </button>
         <div id="gallery-container"></div>
-        <div id="pagination-controls"></div>
+        <div id="pagination-controls" class="section-fade"></div>
         <div class="popup">
             <span class="close">&times;</span>
             <img src="" alt="Popup Artwork">
         </div>
     </section>
     <section id="painting-game" class="painting-game">
-        <h2 data-key="drawing-title">Try Your Hand at Drawing!</h2>
+        <h2 data-key="drawing-title" class="section-fade">Try Your Hand at Drawing!</h2>
         <iframe src="https://jspaint.app"></iframe>
     </section>
     <section id="about" class="about">
@@ -638,38 +641,104 @@
             }
         }); 
         document.querySelectorAll('header nav ul li a').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault(); 
-                const href = this.getAttribute('href');
-                if (href !== "#" && href !== "") {
-                    const target = document.querySelector(href);
-                    if (target) {
-                        const targetTop = target.getBoundingClientRect().top + window.scrollY;
-                        const startPosition = window.scrollY;
-                        const distance = targetTop - startPosition;
-                        const duration = 1000; 
-                        let startTime = null;
-                        function animateScroll(currentTime) {
-                            if (!startTime) startTime = currentTime;
-                            const timeElapsed = currentTime - startTime;
-                            const run = easeInOutQuad(timeElapsed, startPosition, distance, duration);
-                            window.scrollTo(0, run);
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const href = this.getAttribute('href');
+        
+        if (href !== "#" && href !== "") {
+            const target = document.querySelector(href);
+            if (target) {
+                const targetTop = target.getBoundingClientRect().top + window.scrollY;
+                const startPosition = window.scrollY;
+                const distance = targetTop - startPosition;
+                const duration = 700; // Shorter duration for smoother scrolling on mobile
+                let startTime = null;
 
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animateScroll);
-                            }
-                        }
-                        function easeInOutQuad(t, b, c, d) {
-                            t /= d / 2;
-                            if (t < 1) return (c / 2) * t * t + b;
-                            t--;
-                            return (-c / 2) * (t * (t - 2) - 1) + b;
-                        }
+                function animateScroll(currentTime) {
+                    if (!startTime) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    const run = easeInOutQuad(timeElapsed, startPosition, distance, duration);
+                    window.scrollTo(0, run);
+
+                    if (timeElapsed < duration) {
                         requestAnimationFrame(animateScroll);
                     }
                 }
+
+                function easeInOutQuad(t, b, c, d) {
+                    t /= d / 2;
+                    if (t < 1) return (c / 2) * t * t + b;
+                    t--;
+                    return (-c / 2) * (t * (t - 2) - 1) + b;
+                }
+
+                requestAnimationFrame(animateScroll);
+            }
+        }
+    });
+
+    // Adding touch event support
+    anchor.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        const href = this.getAttribute('href');
+        
+        if (href !== "#" && href !== "") {
+            const target = document.querySelector(href);
+            if (target) {
+                const targetTop = target.getBoundingClientRect().top + window.scrollY;
+                const startPosition = window.scrollY;
+                const distance = targetTop - startPosition;
+                const duration = 700; // Shorter duration for smoother scrolling on mobile
+                let startTime = null;
+
+                function animateScroll(currentTime) {
+                    if (!startTime) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    const run = easeInOutQuad(timeElapsed, startPosition, distance, duration);
+                    window.scrollTo(0, run);
+
+                    if (timeElapsed < duration) {
+                        requestAnimationFrame(animateScroll);
+                    }
+                }
+
+                function easeInOutQuad(t, b, c, d) {
+                    t /= d / 2;
+                    if (t < 1) return (c / 2) * t * t + b;
+                    t--;
+                    return (-c / 2) * (t * (t - 2) - 1) + b;
+                }
+
+                requestAnimationFrame(animateScroll);
+            }
+        }
+    });
+});
+
+        document.addEventListener('DOMContentLoaded', () => {
+        const animatedElements = document.querySelectorAll('.section-fade');
+        const observerOptions = {
+            root: null,
+            rootMargin: '-50px',
+            threshold: [0, 0.5, 1]
+        };
+        const observerCallback = (entries) => {
+            entries.forEach(entry => {
+                const element = entry.target;
+                if (entry.isIntersecting) {
+                    element.style.transition = 'opacity 1.5s ease';
+                    element.style.opacity = '1';
+                } else {
+                    element.style.transition = 'none';
+                    element.style.opacity = '0';
+                }
             });
+        };
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        animatedElements.forEach(element => {
+            observer.observe(element);
         });
+    });
     </script>
 </body>
 </html>
