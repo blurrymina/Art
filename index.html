@@ -15,9 +15,13 @@
             padding: 0;
             box-sizing: border-box;
         }
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Roboto', sans-serif; 
             background-color: #fff6f3; 
+            scroll-behavior: smooth;
             overflow-x: hidden;   
         }
         header {
@@ -73,9 +77,14 @@
         header nav ul li a {
             text-decoration: none;
             color: #fff;
+            scroll-behavior: smooth;
             font-size: 1rem; 
             transition: color 0.3s;
             font-family: 'Dancing Script', cursive;
+        }
+        header nav ul li a.active {
+            color: #3f3a3a;
+            font-weight: bold;
         }
          header nav ul li a:hover {
             color: #3f3a3a; 
@@ -366,14 +375,14 @@
         </div>
         <nav>
             <ul>
-                <li><a href="#" data-key="home">Home</a></li>
+                <li><a href="#hero" data-key="home">Home</a></li>
                 <li><a href="#gallery" data-key="gallery">Gallery</a></li>
                 <li><a href="#painting-game" data-key="draw">Draw</a></li>
                 <li><a href="#about" data-key="about">About</a></li>
             </ul>
         </nav>
     </header>
-    <section class="hero">
+    <section id="hero" class="hero">
         <div>
             <h1 data-key="hero-welcome">Welcome to My Art World</h1>
         </div>
@@ -627,6 +636,39 @@
             } else {
                 header.style.background = 'linear-gradient(45deg, #ff9a9e, #fad0c4)';
             }
+        }); 
+        document.querySelectorAll('header nav ul li a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault(); 
+                const href = this.getAttribute('href');
+                if (href !== "#" && href !== "") {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        const targetTop = target.getBoundingClientRect().top + window.scrollY;
+                        const startPosition = window.scrollY;
+                        const distance = targetTop - startPosition;
+                        const duration = 1000; 
+                        let startTime = null;
+                        function animateScroll(currentTime) {
+                            if (!startTime) startTime = currentTime;
+                            const timeElapsed = currentTime - startTime;
+                            const run = easeInOutQuad(timeElapsed, startPosition, distance, duration);
+                            window.scrollTo(0, run);
+
+                            if (timeElapsed < duration) {
+                                requestAnimationFrame(animateScroll);
+                            }
+                        }
+                        function easeInOutQuad(t, b, c, d) {
+                            t /= d / 2;
+                            if (t < 1) return (c / 2) * t * t + b;
+                            t--;
+                            return (-c / 2) * (t * (t - 2) - 1) + b;
+                        }
+                        requestAnimationFrame(animateScroll);
+                    }
+                }
+            });
         });
     </script>
 </body>
