@@ -407,13 +407,13 @@
         <iframe src="https://jspaint.app"></iframe>
     </section>
     <section id="about" class="about">
-        <h2 data-key="about-title">About the Artist</h2>
-        <p data-key="about-description">Mina is a passionate artist who loves expressing emotions through vibrant colors and unique styles. Each painting tells a story and reflects a piece of her soul.</p>
+        <h2 data-key="about-title" class="section-fade">About the Artist</h2>
+        <p data-key="about-description" class="section-fade">Mina is a passionate artist who loves expressing emotions through vibrant colors and unique styles. Each painting tells a story and reflects a piece of her soul.</p>
         <div class="social">
-            <a href="https://www.instagram.com/blurryminah/" target="_blank" aria-label="Instagram">
+            <a href="https://www.instagram.com/blurryminah/" target="_blank" aria-label="Instagram" class="section-fade">
                 <i class="fab fa-instagram"></i>
             </a>
-            <a href="https://www.tiktok.com/@blurryminah" target="_blank" aria-label="TikTok">
+            <a href="https://www.tiktok.com/@blurryminah" target="_blank" aria-label="TikTok" class="section-fade">
                 <i class="fab fa-tiktok"></i>
             </a>
         </div>
@@ -687,7 +687,7 @@
             entries.forEach(entry => {
                 const element = entry.target;
                 if (entry.isIntersecting) {
-                    element.style.transition = 'opacity 1.5s ease';
+                    element.style.transition = 'opacity 1.7s ease';
                     element.style.opacity = '1';
                 } else {
                     element.style.transition = 'none';
