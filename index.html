@@ -83,8 +83,9 @@
             transition: color 0.3s;
             font-family: 'Dancing Script', cursive;
         }
-         header nav ul li a:hover {
-            color: #3f3a3a; 
+        header nav ul li a.active {
+            color: #3f3a3a;
+            font-weight: bold;
         }
         .hero {
             height: 70vh;
@@ -702,6 +703,39 @@
         animatedElements.forEach(element => {
             observer.observe(element);
         });
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('header nav ul li a');
+        function updateActiveLink() {
+            let closestSection = null;
+            let closestOffset = Number.POSITIVE_INFINITY;
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const offset = Math.abs(rect.top);
+                if (offset < closestOffset) {
+                    closestOffset = offset;
+                    closestSection = section;
+                }
+            });
+            if (
+                window.innerHeight + window.scrollY >=
+                document.body.offsetHeight - 10 
+            ) {
+                closestSection = sections[sections.length - 1];
+            }
+            if (closestSection) {
+                navLinks.forEach(link => link.classList.remove('active'));
+                const activeLink = document.querySelector(
+                    `header nav ul li a[href="#${closestSection.id}"]`
+                );
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            }
+        }
+        window.addEventListener('scroll', updateActiveLink);
+        updateActiveLink();
     });
     </script>
 </body>
